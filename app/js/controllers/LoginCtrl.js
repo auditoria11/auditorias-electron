@@ -45,19 +45,19 @@ angular.module('auditoriaApp')
 					console.log("Dato original no insertado", tx);
 				});
 					
-				ConexionServ.query(consulta, ['DANIEL', 'GRANDAS', 'daniel',  '123', 'Pastor', 'M']).then(function(result) {
+				ConexionServ.query(consulta, ['Daniel', 'Grandas', 'daniel',  '123', 'Pastor', 'M']).then(function(result) {
 		
 				}, function(tx) {
 					console.log("Dato original no insertado", tx);
 				});
 					
-				ConexionServ.query(consulta, ['EDILSON', 'MARQUEZ', 'edilson',  '123', 'Tesorero', 'M']).then(function(result) {
+				ConexionServ.query(consulta, ['Edilson', 'Marquez', 'edilson',  '123', 'Tesorero', 'M']).then(function(result) {
 		
 				}, function(tx) {
 					console.log("Dato original no insertado", tx);
 				});
 					
-				ConexionServ.query(consulta, ['FELIX', 'DÍAZ', 'felix',  '123', 'Pastor', 'M']).then(function(result) {
+				ConexionServ.query(consulta, ['Felix', 'Díaz', 'felix',  '123', 'Pastor', 'M']).then(function(result) {
 		
 				}, function(tx) {
 					console.log("Dato original no insertado", tx);
@@ -1685,7 +1685,7 @@ angular.module('auditoriaApp')
 				
 				// AUDITORIAS
 				consulta = "INSERT INTO auditorias(fecha, hora, iglesia_id) VALUES(?,?,?) ";
-				ConexionServ.query(consulta, ['01/01/2015', '10:10:00am', 1]).then(function(result) {
+				ConexionServ.query(consulta, ['2015-01-01', '10:10:00am', 1]).then(function(result) {
 					console.log('Audi prueba insertada');
 				}, function(tx) {
 					console.log("Dato original no insertado", tx);
@@ -1750,7 +1750,7 @@ angular.module('auditoriaApp')
 				});
 
 				ConexionServ.query(consulta, ['ASOCIACIÓN SUR OCCIDENTAL', 'AGCS11', 'AGCS11' , 1]).then(function(result) {
-					console.log('Audi prueba insertada');
+					console.log('Asociación de prueba insertada');
 				}, function(tx) {
 					console.log("Dato original no insertado", tx);
 				});

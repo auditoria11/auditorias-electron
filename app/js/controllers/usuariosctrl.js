@@ -93,14 +93,14 @@ angular.module("auditoriaApp")
 			consulta 	= "SELECT rowid, * FROM usuarios ORDER BY rowid DESC";
 		}else if(tipo == 'Tesorero' || tipo == 'Pastor'){
 			consulta 	= "SELECT rowid, * FROM usuarios WHERE tipo=? or tipo=? ORDER BY rowid DESC";
-			datos 		= [consulta, ['Tesorero', 'Pastor'] ];
+			datos 		= ['Tesorero', 'Pastor'];
 		}
 		
 		ConexionServ.query(consulta, datos).then(function(result) {
 			$scope.usuarios 			= result;
 			$scope.gridOptions.data 	= $scope.usuarios;
 		}, function(tx) {
-			console.log("Error no es posbile traer usuarios", tx);
+			console.log("Error, no es posbile traer usuarios. ", tx, consulta, datos);
 		});
 	};
 	

@@ -322,7 +322,6 @@ angular.module("auditoriaApp")
 			if (iglesia.fecha_fin3) { iglesia.fecha_fin_new3 		= window.fixDate(iglesia.fecha_fin3); }
 			
 			
-			
 			distrito_id = null;
 			if (iglesia.distrito) {
 				distrito_id 		= iglesia.distrito.rowid;
@@ -332,7 +331,7 @@ angular.module("auditoriaApp")
 				teso_id 		= iglesia.tesorero.rowid;
 			}
 
-			consulta = "UPDATE  iglesias SET nombre=?, alias=?,  distrito_id=?, zona=?, tesorero_id=?, codigo=?, tipo=?, tipo_propiedad=?, anombre_propiedad=?, fecha_propiedad=?, fecha_fin=?, " + 
+			consulta = "UPDATE iglesias SET nombre=?, alias=?,  distrito_id=?, zona=?, tesorero_id=?, codigo=?, tipo=?, tipo_propiedad=?, anombre_propiedad=?, fecha_propiedad=?, fecha_fin=?, " + 
 					"tipo_propiedad2=?, anombre_propiedad2=?, fecha_propiedad2=?, fecha_fin2=?, tipo_propiedad3=?, anombre_propiedad3=?, fecha_propiedad3=?, fecha_fin3=? " +
 				"WHERE rowid=? ";
 			ConexionServ.query(consulta, [iglesia.nombre, iglesia.alias, distrito_id, iglesia.zona, teso_id, iglesia.codigo, iglesia.tipo, iglesia.tipo_propiedad, iglesia.anombre_propiedad, iglesia.fecha_propiedad, iglesia.fecha_fin, 

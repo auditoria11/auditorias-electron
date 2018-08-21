@@ -2,15 +2,45 @@ angular.module('auditoriaApp')
 
 .controller('auditoriasctrl' , function($scope, ConexionServ, $filter, AuthServ, toastr){
 	
+	$scope.iglesias = [];
+	
+	
+	consulta = 'SELECT i.*, i.rowid, d.nombre as nombre_distrito, d.alias as alias_distrito ' +
+		'FROM iglesias i INNER JOIN distritos d ON d.rowid=i.distrito_id';
+		
+	ConexionServ.query(consulta, []).then(function(result){
+		$scope.iglesias = result;
+	} , function(tx){
+			console.log('Error no es posbile traer Entidades' , tx)
+	});
+	 
 	
 	$scope.vercrearauditorias = function(){
 		$scope.vermostrandocrarauditorias = !$scope.vermostrandocrarauditorias
 	}
 
 
-	$scope.veractuauditoria = function(auditoria){
-   		$scope.modusers = !$scope.modusers
-		$scope.auditoria_editars = auditoria;
+	$scope.verActuAuditoria = function(auditoria){
+		
+		if (auditoria.fecha && auditoria.hora) {
+			text = auditoria.fecha + ' ' + auditoria.hora;
+			console.log(text);
+			auditoria.hora_new = new Date(text);
+			console.log(auditoria.hora_new);
+		}
+		
+		if (auditoria.fecha) {
+			auditoria.fecha = new Date(auditoria.fecha);
+		}
+		
+		for (let i = 0; i < $scope.iglesias.length; i++) {
+			const igl = $scope.iglesias[i];
+			if (igl.rowid == auditoria.iglesia_id) {
+				auditoria.iglesia = igl;
+			}
+		}
+   		$scope.modusers 			= !$scope.modusers;
+		$scope.auditoria_editars 	= auditoria;
 	}
 
 	$scope.InsertEntidadAuditoria = function(audit){
@@ -34,19 +64,13 @@ angular.module('auditoriaApp')
 
 	$scope.verMostrarAuditoriasTabla = function(){
 
-		ConexionServ.query('SELECT  a.*, a.rowid, i.nombre, i.alias from auditorias a INNER JOIN iglesias i ON a.iglesia_id = i.rowid  ', []).then(function(result){
+		ConexionServ.query('SELECT a.*, a.rowid, i.nombre, i.alias from auditorias a INNER JOIN iglesias i ON a.iglesia_id = i.rowid  ', []).then(function(result){
 	        $scope.auditorias = result;
 		} , function(tx){
 		   	console.log('Error no es posbile traer auditorias' , tx)
 		})
+		
 
-
-	    ConexionServ.query('SELECT i.*, i.rowid, d.nombre as nombre_distrito, d.alias as alias_distrito from iglesias i INNER JOIN distritos d ON d.rowid=i.distrito_id', []).then(function(result){
-			$scope.iglesias = result;
-		} , function(tx){
-	   		console.log('Error no es posbile traer Entidades' , tx)
-		});
-	 
 	} 
 
 
@@ -68,8 +92,8 @@ angular.module('auditoriaApp')
 		auditoria_cambiar.hora = new Date();
 		auditoria_cambiar.hora = ' ' + auditoria_cambiar.hora.getHours() + ' : ' + auditoria_cambiar.hora.getMinutes() + ' : ' + auditoria_cambiar.hora.getSeconds() ;
 	  	
-	 	consulta ="UPDATE  auditorias SET fecha=?, hora=?, entidad=? WHERE rowid=? "
-		ConexionServ.query(consulta,[auditoria_cambiar.fecha, auditoria_cambiar.hora, auditoria_cambiar.entidad,  auditoria_cambiar.rowid]).then(function(result){
+	 	consulta ="UPDATE auditorias SET fecha=?, hora=?, entidad=?, saldo_ant=? WHERE rowid=? "
+		ConexionServ.query(consulta,[auditoria_cambiar.fecha, auditoria_cambiar.hora, auditoria_cambiar.entidad, auditoria_cambiar.saldo_ant, auditoria_cambiar.rowid]).then(function(result){
 
            console.log('auditoria  Actualizado', result)
            alert('auditoria actualizado correctamente presione F5 para recargar')

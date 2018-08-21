@@ -6,7 +6,7 @@ angular.module('auditoriaApp')
     $scope.sidebar_active   = false;
     $scope.version          = 'X.Y.Z';
     
-    
+    //ConexionServ.createTables()
 	
 	if (require) {
         const {ipcRenderer} = require('electron');

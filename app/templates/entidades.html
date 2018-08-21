@@ -713,7 +713,7 @@
 														<ui-select-match placeholder="Distrito">
 															<span ng-bind="$select.selected.			nombre"></span>
 														</ui-select-match>
-														<ui-select-choices repeat="item in (iglesias |  filter: $select.search) track by $index">
+														<ui-select-choices repeat="item in (distritos |  filter: $select.search) track by $index">
 															<span ng-bind-html="item.nombre | highlight: $select.search"></span>
 														</ui-select-choices>
 													</ui-select>
@@ -745,7 +745,7 @@
 												</div>
 												
 												<div class="col-sm-6">
-													<label for="tipo_distrito_new">Tipo</label>
+													<label style="display: block;" for="tipo_distrito_new">Tipo</label>
 													<div style="margin-bottom: 5px;" class="form-group col-lg-4 col-sm-12 col-xs-12">
 														<div class="row">
 															<div class="col-lg-6 col-sm-6 col-xs-12">
@@ -898,9 +898,9 @@
 
 													<ui-select ng-model="iglesia_edit.distrito" style="width: 100%;" theme="bootstrap">
 														<ui-select-match placeholder="Distrito">
-															<span ng-bind="$select.selected.			nombre"></span>
+															<span ng-bind="$select.selected.nombre"></span>
 														</ui-select-match>
-														<ui-select-choices repeat="item in (iglesias |  filter: $select.search) track by $index">
+														<ui-select-choices repeat="item in (distritos |  filter: $select.search) track by $index">
 															<span ng-bind-html="item.nombre | highlight: $select.search"></span>
 														</ui-select-choices>
 													</ui-select>
@@ -934,7 +934,7 @@
 													</div>
 													
 													<div class="col-sm-6">
-														<label for="tipo_iglesia_edit">Tipo</label>
+														<label style="display: block;" for="tipo_iglesia_edit">Tipo</label>
 														<div style="margin-bottom: 5px;" class="form-group col-lg-4 col-sm-12 col-xs-12">
 															<div class="row">
 																<div class="col-lg-6 col-sm-6 col-xs-12">
@@ -1041,22 +1041,12 @@
 
 
 										</form>
-
-
 									</div>
-
-
 								</div>
-
-
 							</div>
-
 						</div>
-
-
 					</div>
-
-
+					
 					<button class="btn btn-primary" ng-show="!Vercreando_iglesia" ng-click="VerCreandoIglesia()">Crear iglesia</button>
 
 
@@ -1065,9 +1055,7 @@
 
 
 				</div>
-
 			</div>
-			
 		</div>
 	</div>
 
