@@ -12,7 +12,7 @@
     "publish": "build --mac --win -p always",
     "postinstall": "install-app-deps"
   },
-  "repository": "https://github.com/bluesky777/electron-olimpiadas-wissen.git",
+  "repository": "https://github.com/bluesky777/auditorias-electron.git",
   "keywords": [
     "Tesorería",
     "Auditoría",
