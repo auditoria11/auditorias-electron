@@ -38,76 +38,33 @@
                 
 					<div class="col-sm-12">
 						
-						<div class="row">
-						
-							<div style="background-color:#00ffcd;" class="col-sm-2">Distrito: </div>
-							<div style="background-color:#00ffcd;" class="col-sm-2">UNO</div>
-							
-							<div style="background-color:#31a5e7; color:#ffffff;" class="col-sm-2"> Iglesia: </div>
-							<div style="background-color:#31a5e7; color:#ffffff;" class="col-sm-2"> Otra</div>
-
-							<div style="background-color:#ffe500;"  class="col-sm-2" >Fecha</div>
-							<div style="background-color:#ffe500" class="col-sm-2" >23/05/2018</div>
-
-
-
-
-							
-							
-						</div>
-						
-						
-						<div class="row">
-							
-							<div style="background-color:#00ffcd;" class="col-sm-2">Pastor: </div>
-							<div style="background-color:#00ffcd;" class="col-sm-2">UNooooooo</div>
-
-
-						
-
-
-							<div style="background-color:#31a5e7; color:#31a5e7; " class="col-sm-2" >.</div>
-							<div style="background-color:#31a5e7; color:#31a5e7; " class="col-sm-2" >.</div>
-
-							<div style="background-color:#ffe500; color:#ffe500; "  class="col-sm-2" >.</div>
-							<div style="background-color:#ffe500; color:#ffe500;" class="col-sm-2" >.</div>
-
-							
-						</div>
-
-
-						<div class="row">
-
-							<div style="background-color:#ec5446;" class="col-sm-2">Tesorero(a): </div>
-							<div style="background-color:#ec5446;" class="col-sm-2">Mark</div>
-							<div style="background-color:#ec5446; color:#ec5446a8;" class="col-sm-2">.</div>
-							<div style="background-color:#ec5446; color:#ec5446a8;" class="col-sm-2">.</div>
-							<div style="background-color:#ec5446; color:#ec5446a8;" class="col-sm-2">.</div>
-							<div style="background-color:#ec5446; color:#ec5446a8;" class="col-sm-2">.</div>
-							
-							
-														
-						</div>
-
-						<div class="row">
-
-							<div style="background-color:#ec5446; color:#ec5446;" class="col-sm-2">.</div>
-							<div style="background-color:#ec5446; color:#ec5446;" class="col-sm-2">.</div>
-							<div style="background-color:#ec5446; color:#ec5446;" class="col-sm-2">.</div>
-							<div style="background-color:#ec5446; color:#ec5446;" class="col-sm-2">.</div>
-							<div style="background-color:#ec5446; color:#ec5446;" class="col-sm-2">.</div>
-							<div style="background-color:#ec5446; color:#ec5446;" class="col-sm-2">.</div>
-							
-
-							
-						</div>
-
-						
-
-						
 					
+						<table class="table table-bordered table-condensed" style="margin-bottom: 2px;">
 					
-					
+							<tr>
+								<td class="success"> <label>Distrito: </label></td>
+								<td class="success">{{ USER.distrito_nombre }}</td>
+								
+								<td class="info"> <label>Iglesia: </label></td>
+								<td class="info">{{ USER.iglesia_nombre }}</td>
+								
+								<td class="success"> <label>Fecha</label></td>
+								<td class="success">{{ USER.fecha_audit }}</td>
+							</tr>
+						</table>
+						
+						<table class="table table-bordered table-condensed">
+							<tr>
+								<td class="success"> <label>Pastor: </label></td>
+								<td class="success" colspan="2">{{ USER.pastor_nombres }} {{ USER.pastor_apellidos }}</td>
+								
+								<td class="info" style="text-align: right;"> <label>Tesorero(a): </label></td>
+								<td class="info" colspan="2">{{ USER.tesorero_nombres }} {{ USER.tesorero_apellidos }}</td>
+							</tr>
+						</table>
+
+						
+
 						<hr>
 												
 						<div>
@@ -299,7 +256,7 @@
 							
 							<tr>
 								<td class="success"> <label>Saldo anterior auditado</label></td>
-								<td>
+								<td class="success">
 									<input type="text" ng-model="USER.saldo_ant" class=""
 										ng-change="cambiaSaldoAnterior(USER)" 
 										ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
@@ -309,36 +266,27 @@
 							
 							<tr>
 								<td> Total ingreso periodo </td>
-								<td>09879</td>
+								<td>{{ total_ingresos_periodo() }}</td>
 							</tr>
 
 							<tr>
 								<td> <label>Total Disponible del periodo</label></td>
-								<td>098709709</td>
+								<td>{{ total_disponible_periodo }}</td>
 							</tr>
-
 
 							<tr>
-								<td> <label>Menos Gastos Del Periodo</label></td>
-								<td>098709709</td>
+								<td class="warning"> <label>Menos Gastos Del Periodo</label></td>
+								<td class="warning">098709709</td>
 							</tr>
 
+						</table>
 
-							<tr>
-								<td> <label>Menos Gastos  Periodo</label></td>
-								<td>098709709</td>
-							</tr>
-
+						<table  class="table table-bordered table-condensed">
 
 							<tr>
 								<td> <label>Total fondos de iglesia</label></td>
 								<td>098709709</td>
 							</tr>
-
-
-						</table>
-
-						<table  class="table table-bordered table-condensed">
 
 							<tr>
 								<td>Ingresos por registrar</td>
@@ -364,20 +312,12 @@
 								<td>Ajuste de auditoria por enviar</td>
 								<td>65456485</td>
 							</tr>
-							
-							
-						</table >
-
-
-						<table  class="table table-bordered table-condensed">
 							<tr>
-								<td><label>Total</label></td>
-								<td>584545</td>
+								<td class="info"><label>Total</label></td>
+								<td class="info">584545</td>
 							</tr>
-						</table>
-
-
 							
+						</table >							
 
 						
 
@@ -393,53 +333,34 @@
 							<tr>
 								<td>Consig. En bancos asociación</td>
 								<td>78855</td>
-								
 							</tr>
-
 
 							<tr>
 								<td>Gastos del mes por registrar</td>
 								<td>961444</td>
-								
 							</tr>
 
 
 							<tr>
 								<td>Dinero efectivo</td>
 								<td>20000</td>
-								
-								
 							</tr>
 
 							<tr>
 								<td>Cuentas por cobrar</td>
 								<td>89741</td>
 							</tr>
-						</table>
-
-						<table class="table table-bordered table-condensed">
-
+							
 							<tr>
-								<td><label>Total</label></td>
-								<td>5457454</td>
+								<td class="info"><label>Total</label></td>
+								<td class="info">5457454</td>
 							</tr>
 							
-						</table>
-
-						<table class="table table-bordered table-condensed">
-
 							<tr>
-								<td><label>Diferencia</label></td>
-								<td>33554</td>
+								<td class="warning"><label>Diferencia</label></td>
+								<td class="warning">33554</td>
 							</tr>
-							
 						</table>
-
-
-
-
-
-
 
 					</div>
 					

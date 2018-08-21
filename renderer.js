@@ -21,7 +21,7 @@ if (!process.env.NODE_PORT) {
 
 app.use(cors());
 app.use(bodyParser.json()); // Para recibir json desde Angular
-app.use("/images", express.static(path.join(__dirname, 'app/images')));
+app.use("/images", express.static(path.join(__dirname, 'app/img')));
 
 
 
@@ -49,7 +49,7 @@ var db              = require(path.join(__dirname, '/app/conexion/connWeb'));
 
 
 // Para las fechas
-window.fixDate = function(fec){
+window.fixDate = function(fec, con_hora){
 	dia   = fec.getDate();
 	mes   = (fec.getMonth() + 1 );
 	year  = fec.getFullYear();
@@ -63,7 +63,19 @@ window.fixDate = function(fec){
 	}
   
 	fecha   = '' + year + '-' + mes  + '-' + dia;
-  
+	
+	if (con_hora){
+		hora 	= fec.getHours();
+		if (hora<10) { hora = '0' + hora; };
+		min 	= fec.getMinutes();
+		if (min<10) { min = '0' + min; };
+		sec 	= fec.getSeconds();
+		if (sec<10) { sec = '0' + sec; };
+		fecha 	= fecha + ' ' + hora + ':' + min + ':' + sec
+	}
+	
 	return fecha;
 }
-  
+window.getRandomInt = function(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}

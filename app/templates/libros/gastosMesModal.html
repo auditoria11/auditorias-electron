@@ -27,12 +27,11 @@
                     ng-change="cambiaValor(gasto, 'descripcion')" enter-as-tab
                     ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
                     uib-typeahead="gasto_search for gasto_search in getConcordancias($viewValue)" 
-                    typeahead-loading="loadingLocations" typeahead-no-results="gasto.noResults"
                     typeahead-on-select="cambiaValor(gasto, 'descripcion')">
                 
                 <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
                 <div ng-show="gasto.noResults">
-                    <i class="glyphicon glyphicon-remove"></i> No hay gasto como este
+                    No hay gasto como este
                 </div>
                 
             </td>
@@ -56,11 +55,10 @@
             </td>
             <td class="padding4">
                 <input type="text" ng-model="descrip_gasto_new" placeholder="Descripción" style="widows: 100px;" enter-as-tab
-                    uib-typeahead="gasto_search for gasto_search in getConcordancias($viewValue)" 
-                    typeahead-loading="loadingLocations" typeahead-no-results="noResults">
+                    uib-typeahead="gasto_search for gasto_search in getConcordancias($viewValue)" >
                 <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
                 <div ng-show="noResults">
-                    <i class="glyphicon glyphicon-remove"></i> No hay gasto como este
+                    No hay gasto como este
                 </div>
             </td>
             

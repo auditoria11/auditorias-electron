@@ -1,14 +1,17 @@
 angular.module('auditoriaApp')
 
 
-.controller('LoginCtrl', function($scope, $state, ConexionServ, AuthServ){
+.controller('LoginCtrl', function($scope, $state, toastr, ConexionServ, AuthServ){
     
-    $scope.user = {}
+    $scope.user = {username: ''}
     
     
     
     $scope.entrar = function(user){
-        
+		
+		if (!user.username || user.username.length < 2) {
+			toastr.warning('Nombre de usuario incorrecto');
+		}
         
         AuthServ.loguear(user).then(function(){
             $state.go('panel')
@@ -30,13 +33,13 @@ angular.module('auditoriaApp')
 			if (result.length == 0) {
 				
 				consulta = "INSERT INTO usuarios(nombres, apellidos, username, password, tipo, sexo) VALUES(?,?,?,?,?,?) ";
-				ConexionServ.query(consulta, ['JORGE', 'CELEDON', 'jorge',  '123', 'Pastor', 'M']).then(function(result) {
+				ConexionServ.query(consulta, ['Joseth D', 'Guerrero', 'joseth',  '123', 'Admin', 'M']).then(function(result) {
 		
 				}, function(tx) {
 					console.log("Dato original no insertado", tx);
 				});
 				
-				ConexionServ.query(consulta, ['JUAN CAMILO', 'MANRRIQUE', 'juan',  '123', 'Tesorero', 'M']).then(function(result) {
+				ConexionServ.query(consulta, ['Gustavo', 'Pérez', 'gustavo',  '123', 'Auditor', 'M']).then(function(result) {
 		
 				}, function(tx) {
 					console.log("Dato original no insertado", tx);

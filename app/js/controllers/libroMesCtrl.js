@@ -1,6 +1,6 @@
 angular.module("auditoriaApp")
 
-.controller("libroMesCtrl", function($scope, ConexionServ, $filter, $uibModal, toastr) {
+.controller("libroMesCtrl", function($scope, ConexionServ, $filter, $uibModal, toastr, AuthServ) {
 
 	
 	$scope.entidades 				= true;
@@ -8,61 +8,58 @@ angular.module("auditoriaApp")
 	$scope.widget_maximized_totales = false;
 	
     $scope.distrito_new 	= {};
-		$scope.modentidades 	= false;
-		$scope.verCrearDistrito = false;
-		$scope.usuarios 		= [];
-		$scope.verCrearLibroMensual = false;
-		
+	$scope.modentidades 	= false;
+	$scope.verCrearDistrito = false;
+	$scope.usuarios 		= [];
+	$scope.verCrearLibroMensual = false;
 	
-		$scope.meses = [
-			{num: 0, mes: 'Enero'},
-			{num: 1, mes: 'Febrero'},
-			{num: 3, mes: 'Marzo'},
-            {num: 4, mes: 'Abril'},
-            {num: 5, mes: 'Mayo'},
-            {num: 6, mes: 'Junio'},
-            {num: 7, mes: 'Julio'},
-            {num: 8, mes: 'Agosto'},
-            {num: 9, mes: 'Septiembre'},
-            {num: 10, mes: 'Octubre'},
-            {num: 11, mes: 'Noviembre'},
-            {num: 12, mes: 'Diciembre'}
-
-		];
-
-		$scope.years = [
-			{year: 2017},
-			{year: 2018},
-			{year: 2019},
-			{year: 2020},
-			{year: 2021},
-			{year: 2022},
-			{year: 2023},
-			{year: 2024},
-			{year: 2025},
-			{year: 2026},
-			{year: 2027},
-			{year: 2028},
-			{year: 2029},
-			{year: 2030}
-		];
-		
-		$scope.gridOptions = {
-			enableSorting: true,
-			enableFiltering: true,
-			columnDefs: [
-				{ field: 'nombre' },
-				{ field: 'alias' },
-				{ field: 'celular' },
-				{ field: 'tesorero_nombres' }
-			],
-			onRegisterApi: function( gridApi ) {
-				$scope.grid1Api = gridApi;
-			}
-		};
-		
 	
+	$scope.meses = [
+		{num: 0, mes: 'Enero'},
+		{num: 1, mes: 'Febrero'},
+		{num: 3, mes: 'Marzo'},
+		{num: 4, mes: 'Abril'},
+		{num: 5, mes: 'Mayo'},
+		{num: 6, mes: 'Junio'},
+		{num: 7, mes: 'Julio'},
+		{num: 8, mes: 'Agosto'},
+		{num: 9, mes: 'Septiembre'},
+		{num: 10, mes: 'Octubre'},
+		{num: 11, mes: 'Noviembre'},
+		{num: 12, mes: 'Diciembre'}
+	];
 
+	$scope.years = [
+		{year: 2017},
+		{year: 2018},
+		{year: 2019},
+		{year: 2020},
+		{year: 2021},
+		{year: 2022},
+		{year: 2023},
+		{year: 2024},
+		{year: 2025},
+		{year: 2026},
+		{year: 2027},
+		{year: 2028},
+		{year: 2029},
+		{year: 2030}
+	];
+	
+	$scope.gridOptions = {
+		enableSorting: true,
+		enableFiltering: true,
+		columnDefs: [
+			{ field: 'nombre' },
+			{ field: 'alias' },
+			{ field: 'celular' },
+			{ field: 'tesorero_nombres' }
+		],
+		onRegisterApi: function( gridApi ) {
+			$scope.grid1Api = gridApi;
+		}
+	};
+	
 
 
 
@@ -156,8 +153,8 @@ angular.module("auditoriaApp")
   			return;
   		}
   		if (libro_new.year.length > 1) {
-			  toastr.warning('Solo puedes seleccionar un año.');
-			  $scope.creando_libro = false;
+			toastr.warning('Solo puedes seleccionar un año.');
+			$scope.creando_libro = false;
   			return;
   		}
 
@@ -200,24 +197,31 @@ angular.module("auditoriaApp")
 	
 
 	$scope.traerDatos = function(){
+		AuthServ.update_user_storage($scope.USER).then((actualizado)=>{
+			console.log(actualizado);
+			$scope.USER 		= actualizado;
+			$scope.lib_meses 	= [];
 
-		$scope.lib_meses = [];
-
-		consulta 	= 'SELECT m.*, m.rowid, s.*, s.rowid FROM lib_mensuales m ' + 
+			consulta 	= 'SELECT m.*, m.rowid, s.*, s.rowid as lib_semanal_id FROM lib_mensuales m ' + 
 						'INNER JOIN lib_semanales s ON m.rowid=s.libro_mes_id';
-		
-		ConexionServ.query(consulta, []).then(function(result) {
-			$scope.lib_meses = result;
 			
-			angular.forEach($scope.lib_meses, function(lib_mes, indice){
-				$scope.gastosLibMes(lib_mes);
-			})
-			
-		}, function(tx) {
-			console.log("Error no se pudo traer datos", tx);
-		});
+			ConexionServ.query(consulta, []).then(function(result) {
+				$scope.lib_meses = result;
+				
+				angular.forEach($scope.lib_meses, function(lib_mes, indice){
+					$scope.gastosLibMes(lib_mes);
+				})
 
+			}, function(tx) {
+				console.log("Error no se pudo traer datos", tx);
+			});
+
+		})
+		
 	}
+	
+	$scope.traerDatos();
+	
 	
 	$scope.gastosLibMes = function (lib_mes) {
 		consulta 	= 'SELECT g.*, g.rowid FROM gastos_mes g WHERE g.libro_mes_id=?';
@@ -229,10 +233,6 @@ angular.module("auditoriaApp")
 		});
 	}
 
-
-
-	
-	$scope.traerDatos();
 
    	$scope.EliminarLibroMensul = function(lib_mens){
 	  	
@@ -255,6 +255,40 @@ angular.module("auditoriaApp")
 	}
 	 
 
+	$scope.cambiaSaldoAnterior = function(usu) {
+
+		consulta 	= 'UPDATE auditorias SET saldo_ant=? WHERE rowid=?';
+        
+		ConexionServ.query(consulta, [usu.saldo_ant, usu.iglesia_audit_id]).then(function(){
+			toastr.success('Saldo guardado');
+		}, function(){
+			toastr.error('Saldo NO guardado');
+		});
+
+	}
+	
+	$scope.total_ingresos_periodo = ()=>{
+		
+		if ($scope.lib_meses) {
+			suma = 0;
+			for (let i = 0; i < $scope.lib_meses.length; i++) {
+				const mes = $scope.lib_meses[i];
+				suma = suma + (mes.especiales + mes.ofrendas * 0.6);
+			}
+			$scope.total_disponible_periodo = $filter('currency')((suma + $scope.USER.saldo_ant), '', 0);
+			return $filter('currency')(suma, '', 0);
+		}else{
+			$scope.total_disponible_periodo = 0;
+			return 0;
+		}
+		
+	}
+
+	
+	if (require) {
+		console.log(require('electron'));
+	}
+	
 	
 	
 });

@@ -30,57 +30,51 @@
                     
                     <div ng-show="vermostrandocrarauditorias" class="panel panel-warning" style="margin-bottom: 50px">
 
-                            <div class="box-header well">
+                      <div class="box-header well">
                         <h2>
                           <i class="glyphicon glyphicon-plus"></i> Nueva Auditoria
                         </h2>
-                      
                         <div class="box-icon"></div>
                       </div>
                       
-                      <!--
-                        <div class="panel-heading">Ingrese  los datos de Auditorias en los campos correspodientes</div>-->
+                      <form ng-submit="InsertEntidadAuditoria(auditoria_crear)">
+                        <div class="row">
 
-                         <form ng-submit="InsertEntidadAuditoria(auditoria_crear)">
-
-                          <div class="row">
-
-                              <div class="form-group col-sm-6"> <label>Fecha</label>
-                                    <input  required="required" required="required" type="date" class="form-control"  placeholder="Fecha " ng-model="auditoria_crear.fecha">
-                              </div>
+                          <div class="form-group col-sm-6"> <label>Fecha</label>
+                                <input  required="required" required="required" type="date" class="form-control"  placeholder="Fecha " ng-model="auditoria_crear.fecha">
+                          </div>
+                          
                           <div class="form-group col-sm-6"> <label>Hora</label>
                             <input required="required" type="time"  class="form-control" placeholder="Hora" ng-model="auditoria_crear.hora">
                           </div>
                             
+                          <div class="form-group col-sm-6"> <label>Saldo anterior</label>
+                            <input type="text" ng-model="auditoria_crear.saldo_ant" class="form-control" enter-as-tab ui-number-mask="0">
                           </div>
+                            
+                        </div>
 
                           
-                          <div>  <label>Iglesia</label>
+                          <div>  
+                            <label>Iglesia</label>
                             
-                                          <ui-select ng-model="auditoria_crear.iglesia" style="width: 100%;" theme="bootstrap">
-                                            <ui-select-match placeholder="Iglesia">
-                                              <span ng-bind="$select.selected.nombres + ' ' + $select.selected.alias"></span>
-                                            </ui-select-match>
-                                            <ui-select-choices group-by="agruparPorDistrito" repeat="item in iglesias |  filter: $select.search track by $index">
-                                             <span ng-bind-html="item.nombres + ' ' + item.alias | highlight: $select.search"></span>
-                                            </ui-select-choices>
-                                          </ui-select>
-                            </div>
-
-
-                           <div class="center">
-                        <input class="btn btn-warning " type="button" ng-click="cancelar_crear_distrito()" value="Cancelar">
-                        <input class="btn btn-primary " type="submit" name="" value="Crear Auditoria">
-                                                 
+                            <ui-select ng-model="auditoria_crear.iglesia" style="width: 100%;" theme="bootstrap">
+                              <ui-select-match placeholder="Iglesia">
+                                <span ng-bind="$select.selected.nombres + ' ' + $select.selected.alias"></span>
+                              </ui-select-match>
+                              <ui-select-choices group-by="agruparPorDistrito" repeat="item in iglesias |  filter: $select.search track by $index">
+                                <span ng-bind-html="item.nombres + ' ' + item.alias | highlight: $select.search"></span>
+                              </ui-select-choices>
+                            </ui-select>
                           </div>
-                         
-                   
-                                                                      
 
-                            
-                          
-                        </form>
-                 </div>
+
+                          <div class="center">
+                            <input class="btn btn-warning " type="button" ng-click="cancelar_crear_distrito()" value="Cancelar">
+                            <input class="btn btn-primary " type="submit" name="" value="Crear Auditoria">          
+                          </div>
+                      </form>
+                    </div>
 
 
 
