@@ -30,16 +30,23 @@ let win;
 function sendStatusToWindow(text) {
   win.webContents.send('message', text);
 }
+const {ipcMain} = require('electron')
+ipcMain.on('dame-version', (event, arg) => {
+  event.sender.send('toma-version', app.getVersion())
+})
+
 function createDefaultWindow() {
   win = new BrowserWindow({width: 1200, height: 600});
   win.webContents.openDevTools();
   win.on('closed', () => {
     win = null;
   });
-  win.loadURL(`file://${__dirname}/app/index.html#v${app.getVersion()}`);
+  //win.loadURL(`file://${__dirname}/app/index.html#v${app.getVersion()}`);
+  win.loadURL(`file://${__dirname}/app/index.html`);
   win.maximize();
   return win;
 }
+
 autoUpdater.on('checking-for-update', () => {
   sendStatusToWindow('Verificando si hay actualizaciones...');
 })
@@ -50,7 +57,7 @@ autoUpdater.on('update-not-available', (info) => {
   sendStatusToWindow('Esta es la última versión.');
 })
 autoUpdater.on('error', (err) => {
-  sendStatusToWindow('Error en el auto-updater. ' + err);
+  sendStatusToWindow('Error al buscar actualización (tal vez no hay internet). ' + err);
 })
 autoUpdater.on('download-progress', (progressObj) => {
   let log_message = "Velocidad de descarga: " + progressObj.bytesPerSecond;
@@ -65,28 +72,6 @@ autoUpdater.on('update-downloaded', (info) => {
 
 
 
-
-
-
-
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
-
-function createWindow () {
-  // Create the browser window.
-  mainWindow = new BrowserWindow({width: 1200, height: 600})
-  mainWindow.loadFile('index.html')
-  mainWindow.webContents.openDevTools()
-  mainWindow.on('closed', function () {
-    mainWindow = null
-  })
-}
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-//app.on('ready', createWindow)
 app.on('ready', ()=>{
   if (!isDev) {
     autoUpdater.checkForUpdates();

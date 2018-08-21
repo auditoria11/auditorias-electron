@@ -28,6 +28,24 @@ angular.module("auditoriaApp")
 	$scope.iglesia_new 	= angular.copy($scope.tpl_igle);
 	$scope.distrito_new = angular.copy($scope.tpl_distr);
 	
+	$scope.ver_uniones 		= false;
+	$scope.ver_asociaciones = false;
+	$scope.ver_distritos 	= false;
+	$scope.ver_iglesias 	= false;
+	
+	$scope.toggleUniones = ()=>{
+		$scope.ver_uniones = !$scope.ver_uniones;
+	}
+	$scope.toggleAsociaciones = ()=>{
+		$scope.ver_asociaciones = !$scope.ver_asociaciones;
+	}
+	$scope.toggleDistritos = ()=>{
+		$scope.ver_distritos = !$scope.ver_distritos;
+	}
+	$scope.toggleIglesias = ()=>{
+		$scope.ver_iglesias = !$scope.ver_iglesias;
+	}
+	
 
     btGrid1 ='<a uib-tooltip="Editar" tooltip-placement="left" tooltip-append-to-body="true" class="btn btn-default btn-xs icon-only" ng-click="grid.appScope.Ver_actualizar_iglesia(row.entity)"><i class="glyphicon glyphicon-pencil "></i></a>';
     btGrid2 ='<a uib-tooltip=" Eliminar" tooltip-placement="right" tooltip-append-to-body="true" class="btn btn-danger btn-xs icon-only" ng-click="grid.appScope.EliminarIglesia(row.entity)"><i class="glyphicon glyphicon-remove  "></i></a>';

@@ -90,6 +90,7 @@
                       <th scope="col">Fecha</th>
                       <th scope="col">Hora</th>
                       <th scope="col">Iglesia</th>
+                      <th scope="col">Saldo ante</th>
                       <th scope="col">Actual</th>
 
 
@@ -103,6 +104,7 @@
                       <td>{{auditoria.hora}}</td>
                       <td >{{auditoria.nombre +' ' + auditoria.alias}}</td>
                      
+                      <td>{{auditoria.saldo_ant | currency:'$':0}}</td>
                       <td>
                         <div class="btn-group">                        
                           <button class="btn btn-primary btn-sm" ng-click="veractuauditoria(auditoria)">

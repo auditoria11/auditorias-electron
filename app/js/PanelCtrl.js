@@ -4,10 +4,26 @@ angular.module('auditoriaApp')
     
     $scope.USER             = USER;
     $scope.sidebar_active   = false;
+    $scope.version          = 'X.Y.Z';
     
     
-    
-    ConexionServ.createTables();
+	
+	if (require) {
+        const {ipcRenderer} = require('electron');
+        ipcRenderer.on('message', function(event, text) {
+          var container = document.getElementById('messages');
+          var message   = document.createElement('div');
+          message.innerHTML = text;
+          container.appendChild(message);
+        })
+        
+        
+        ipcRenderer.on('toma-version', function(event, arg) {
+            $scope.version = arg;
+        })
+        
+        ipcRenderer.send('dame-version');
+	}
     
     
     

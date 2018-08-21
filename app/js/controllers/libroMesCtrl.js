@@ -275,18 +275,13 @@ angular.module("auditoriaApp")
 				const mes = $scope.lib_meses[i];
 				suma = suma + (mes.especiales + mes.ofrendas * 0.6);
 			}
-			$scope.total_disponible_periodo = $filter('currency')((suma + $scope.USER.saldo_ant), '', 0);
-			return $filter('currency')(suma, '', 0);
+			$scope.total_disponible_periodo = $filter('currency')((suma + $scope.USER.saldo_ant), '$', 0);
+			return $filter('currency')(suma, '$', 0);
 		}else{
 			$scope.total_disponible_periodo = 0;
 			return 0;
 		}
 		
-	}
-
-	
-	if (require) {
-		console.log(require('electron'));
 	}
 	
 	
