@@ -13,6 +13,8 @@ angular.module('auditoriaApp')
                 "codigo varchar(100)  DEFAULT NULL collate nocase," +
                 "presidente integer DEFAULT NULL," +
                 "pais varchar(100)  DEFAULT NULL collate nocase," +
+                "modificado varchar(100)  DEFAULT NULL collate nocase," +
+                "eliminado integer  DEFAULT '0'," +
                 "division_id integer DEFAULT NULL)"; // Tesorero del distrito
 
     sqlAsociaciones = "CREATE TABLE IF NOT EXISTS asociaciones (id integer," +
@@ -21,6 +23,8 @@ angular.module('auditoriaApp')
                 "codigo varchar(100)  DEFAULT NULL collate nocase," +
                 "zona varchar(100)  DEFAULT NULL collate nocase," +
                 "union_id integer DEFAULT NULL," +
+                "modificado varchar(100)  DEFAULT NULL collate nocase," +
+                "eliminado integer  DEFAULT '0'," +
                 "tesorero_id integer DEFAULT NULL)"; // Tesorero del distrito
 
     sqlDistritos = "CREATE TABLE IF NOT EXISTS distritos (id integer," +
@@ -28,7 +32,10 @@ angular.module('auditoriaApp')
                 "alias varchar(100)  DEFAULT NULL collate nocase," +
                 "codigo varchar(100)  DEFAULT NULL collate nocase," +
                 "zona varchar(100)  DEFAULT NULL collate nocase," +
+                "asociacion_id integer DEFAULT NULL," +
                 "pastor_id integer DEFAULT NULL," +
+                "modificado varchar(100)  DEFAULT NULL collate nocase," +
+                "eliminado varchar(100)  DEFAULT NULL collate nocase," +
                 "tesorero_id integer DEFAULT NULL)"; // Tesorero del distrito
 
    sqlIglesias = "CREATE TABLE IF NOT EXISTS iglesias (id integer," +
@@ -53,6 +60,9 @@ angular.module('auditoriaApp')
                 "anombre_propiedad3 varchar(255)  DEFAULT NULL collate nocase," +
                 "fecha_propiedad3 varchar(100)  DEFAULT NULL collate nocase," +
                 "fecha_fin3 varchar(100)  DEFAULT NULL collate nocase," +
+
+                "modificado varchar(100)  DEFAULT NULL collate nocase," +
+                "eliminado varchar(100)  DEFAULT NULL collate nocase," +
                 
                 "tesorero_id integer DEFAULT NULL," + // Tesorero de la iglesia
                 "secretario_id integer DEFAULT NULL)";
@@ -70,6 +80,8 @@ angular.module('auditoriaApp')
                 "iglesia_id integer DEFAULT NULL," +
                 "auditoria_id integer DEFAULT NULL," +
                 "celular varchar(100)  NULL," +
+                "modificado varchar(100)  DEFAULT NULL collate nocase," +
+                "eliminado varchar(100)  DEFAULT NULL collate nocase," +
                 "username varchar(100)  NOT NULL , " +  
                 "password varchar(100)  NOT NULL)" ;
 
@@ -77,6 +89,8 @@ angular.module('auditoriaApp')
                 "fecha varchar(100)  DEFAULT NULL collate nocase," +
                 "hora varchar(100)  DEFAULT NULL collate nocase," +
                 "saldo_ant integer  DEFAULT NULL," +
+                "modificado varchar(100)  DEFAULT NULL collate nocase," +
+                "eliminado varchar(100)  DEFAULT NULL collate nocase," +
                 "iglesia_id integer  NOT NULL )" ;
 
     sqlLibMes = "CREATE TABLE IF NOT EXISTS lib_mensuales (id integer," +
@@ -89,6 +103,8 @@ angular.module('auditoriaApp')
                 "especiales integer  DEFAULT 0 ," + 
                 "gastos integer  DEFAULT 0 ," + 
                 "gastos_soportados integer  DEFAULT 0 ," + 
+                "modificado varchar(100)  DEFAULT NULL collate nocase," +
+                "eliminado varchar(100)  DEFAULT NULL collate nocase," +                
                 "remesa_enviada integer  DEFAULT 0 )";
 
     // Dinero recogido en los 5 o 4 sábados del mes. Puede especificar por sábado o por total

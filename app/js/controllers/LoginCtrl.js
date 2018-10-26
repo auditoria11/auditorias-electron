@@ -26,6 +26,30 @@ angular.module('auditoriaApp')
     
     ConexionServ.createTables();
 	
+    $scope.insertar_dato_inicial = function() {
+		
+    	consulta = "SELECT * from usuarios ";
+   		ConexionServ.query(consulta, []).then(function(result) {
+			if (result.length == 0) {
+				
+				consulta = "INSERT INTO usuarios(nombres, apellidos, username, password, tipo, sexo) VALUES(?,?,?,?,?,?) ";
+				ConexionServ.query(consulta, ['Joseth D', 'Guerrero', 'joseth',  '123', 'Admin', 'M']).then(function(result) {
+		
+				}, function(tx) {
+					console.log("Dato original no insertado", tx);
+				});
+				
+			}
+			
+        }, function(tx) {
+          console.log("", tx);
+		});
+		
+	};
+	
+	$scope.insertar_dato_inicial();
+	
+	
     $scope.insertar_datos_iniciales = function() {
 		
     	consulta = "SELECT * from usuarios ";
@@ -1765,8 +1789,6 @@ angular.module('auditoriaApp')
 		});
 		
 	};
-	
-	$scope.insertar_datos_iniciales();
 	
 	
     

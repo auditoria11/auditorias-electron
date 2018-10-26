@@ -94,6 +94,13 @@ angular.module('auditoriaApp', [
 		templateUrl: 'templates/informes/todas-uniones.html'
 	})
 
+	.state('panel.sincronizacion', {
+		url: '/sincronizacion',
+		controller: 'sincronizacionCtrl',
+		templateUrl: 'templates/sincronizacion.html'
+	})
+
+
 
 	.state('panel.informe.asociaciones', {
 		url: '/Asociaciones',
@@ -124,6 +131,12 @@ angular.module('auditoriaApp', [
 
 	$urlRouterProvider.otherwise('/panel');
 
+})
+
+
+.constant('rutaServidor', {
+    //ruta: 'http://edilson.micolevirtual.com/feryz_server/public/auditorias'
+    ruta: 'http://192.168.100.31/feryz_server/public/auditorias'
 })
 
 
