@@ -34,8 +34,8 @@ angular.module('auditoriaApp')
                 "zona varchar(100)  DEFAULT NULL collate nocase," +
                 "asociacion_id integer DEFAULT NULL," +
                 "pastor_id integer DEFAULT NULL," +
-                "modificado varchar(100)  DEFAULT NULL collate nocase," +
-                "eliminado varchar(100)  DEFAULT NULL collate nocase," +
+                "modificado varchar(100)  DEFAULT 0 collate nocase," +
+                "eliminado varchar(100)  DEFAULT 0 collate nocase," +
                 "tesorero_id integer DEFAULT NULL)"; // Tesorero del distrito
 
    sqlIglesias = "CREATE TABLE IF NOT EXISTS iglesias (id integer," +

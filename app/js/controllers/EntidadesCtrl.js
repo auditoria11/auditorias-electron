@@ -188,7 +188,8 @@ angular.module("auditoriaApp")
 					"t.nombres as tesorero_nombres, t.apellidos as tesorero_apellidos " +
 				"FROM distritos d " +
 				"LEFT JOIN usuarios t ON t.tipo='Tesorero' and t.rowid=d.tesorero_id " +
-				"LEFT JOIN usuarios p ON p.tipo='Pastor' and p.rowid=d.pastor_id ";
+				"LEFT JOIN usuarios p ON p.tipo='Pastor' and p.rowid=d.pastor_id  where d.eliminado = '0'";
+
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.distritos = result;
@@ -197,7 +198,7 @@ angular.module("auditoriaApp")
 			});
 
 			// Traemos Uniones
-			consulta = "SELECT rowid, nombre, alias, codigo, division_id from uniones where eliminado ='0'";
+			consulta = "SELECT rowid, nombre, alias, codigo, division_id from uniones  where eliminado ='0'";
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.uniones = result;
@@ -251,18 +252,15 @@ angular.module("auditoriaApp")
     $scope.EliminarDistrito = function(distrito) {
 			var res = confirm("¿Seguro que desea eliminar ? ");
 
-			if (res == true) {
-				consulta = "DELETE FROM distritos WHERE rowid=? ";
-
-				ConexionServ.query(consulta, [distrito.rowid]).then(function(result) {
-					console.log("Distrito  eliminido", result);
-					$scope.distritos = $filter("filter")($scope.distritos, {rowid: "!" + distrito.rowid});
-					toastr.success("Distrito eliminado.");
-					$scope.focusOnValorNew = true;
-				}, function(tx) {
-					console.log("Distrito no se pudo Eliminar", tx);
-				});
-			}
+		if (res == true) {
+			consulta = "UPDATE  distritos SET eliminado=? WHERE rowid=? ";
+		ConexionServ.query(consulta, ['1', distrito.rowid]).then( function(result) {
+			console.log("distrito Eliminada", result);
+			toastr.success("distrito eliminado Exitosamente.");
+		},function(tx) {
+			toastr.info("El distrito que intenta eliminar no se pudo eliminar.");
+		});
+	}
     };
 
     $scope.VerActualizarDistrito = function(distrito) {
@@ -333,11 +331,11 @@ angular.module("auditoriaApp")
 			}
 
 			consulta = "UPDATE iglesias SET nombre=?, alias=?,  distrito_id=?, zona=?, tesorero_id=?, codigo=?, tipo=?, tipo_propiedad=?, anombre_propiedad=?, fecha_propiedad=?, fecha_fin=?, " + 
-					"tipo_propiedad2=?, anombre_propiedad2=?, fecha_propiedad2=?, fecha_fin2=?, tipo_propiedad3=?, anombre_propiedad3=?, fecha_propiedad3=?, fecha_fin3=? " +
+					"tipo_propiedad2=?, anombre_propiedad2=?, fecha_propiedad2=?, fecha_fin2=?, tipo_propiedad3=?, anombre_propiedad3=?, fecha_propiedad3=?, fecha_fin3=?, modificado=1 " +
 				"WHERE rowid=? ";
 			ConexionServ.query(consulta, [iglesia.nombre, iglesia.alias, distrito_id, iglesia.zona, teso_id, iglesia.codigo, iglesia.tipo, iglesia.tipo_propiedad, iglesia.anombre_propiedad, iglesia.fecha_propiedad, iglesia.fecha_fin, 
 				iglesia.tipo_propiedad2, iglesia.anombre_propiedad2, iglesia.fecha_propiedad2, iglesia.fecha_fin2, 
-				iglesia.tipo_propiedad3, iglesia.anombre_propiedad3, iglesia.fecha_propiedad3, iglesia.fecha_fin3, iglesia.rowid 
+				iglesia.tipo_propiedad3, iglesia.anombre_propiedad3, iglesia.fecha_propiedad3, iglesia.fecha_fin3, iglesia.modificado, iglesia.rowid 
 			]).then(function(result) {
 				console.log("Iglesia Actualizado", result);
 				toastr.success("Iglesia Actualizado Exitosamente.");
@@ -393,22 +391,17 @@ angular.module("auditoriaApp")
     };
 
     $scope.EliminarIglesia = function(iglesia) {
-		
-		modalInstance = $uibModal.open({
-			templateUrl: 'templates/entidades/removeIglesia.html',
-			controller: 'RemoveIglesiaCtrl',
-			resolve: {
-				elemento: ()=> iglesia
-			}
-		})
-		modalInstance.result.then( (usuario)=>{
-			ConexionServ.query($scope.consulta_igle, []).then( function(result) {
-				$scope.iglesias = result;
-				$scope.gridOptions.data = result;
-			}, function(tx) {
-				console.log("Error no es posbile traer iglesias", tx);
+		var res = confirm("¿Seguro que desea eliminar ? ");
+
+		if (res == true) {
+			consulta = "UPDATE  iglesias SET eliminado=? WHERE rowid=? ";
+			ConexionServ.query(consulta, ['1', iglesia.rowid]).then( function(result) {
+				console.log("iglesia Eliminada", result);
+				toastr.success("iglesia Eliminada Exitosamente.");
+			},function(tx) {
+				toastr.info("La iglesia que intenta eliminar no se pudo eliminar.");
 			});
-		})
+		}
 			
     };
 
@@ -435,9 +428,9 @@ angular.module("auditoriaApp")
 		}
 		
 		
-		consulta = "INSERT INTO iglesias(nombre, alias, distrito_id, zona, tesorero_id, tipo_propiedad, anombre_propiedad, fecha_propiedad, fecha_fin, tipo_propiedad2, anombre_propiedad2, fecha_propiedad2, fecha_fin2, tipo_propiedad3, anombre_propiedad3, fecha_propiedad3, fecha_fin3) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		consulta = "INSERT INTO iglesias(nombre, alias, distrito_id, zona, tesorero_id, tipo_propiedad, anombre_propiedad, fecha_propiedad, fecha_fin, tipo_propiedad2, anombre_propiedad2, fecha_propiedad2, fecha_fin2, tipo_propiedad3, anombre_propiedad3, fecha_propiedad3, fecha_fin3, modificado) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-		ConexionServ.query(consulta, [ iglesia.nombre, iglesia.alias, distrito_id, iglesia.zona, teso_id, iglesia.tipo_propiedad, iglesia.anombre_propiedad, iglesia.fecha_propiedad_new, iglesia.fecha_fin_new, iglesia.tipo_propiedad2, iglesia.anombre_propiedad2, iglesia.fecha_propiedad_new2, iglesia.fecha_fin_new2, iglesia.tipo_propiedad3, iglesia.anombre_propiedad3, iglesia.fecha_propiedad_new3, iglesia.fecha_fin_new3]).then(function(result) {
+		ConexionServ.query(consulta, [ iglesia.nombre, iglesia.alias, distrito_id, iglesia.zona, teso_id, iglesia.tipo_propiedad, iglesia.anombre_propiedad, iglesia.fecha_propiedad_new, iglesia.fecha_fin_new, iglesia.tipo_propiedad2, iglesia.anombre_propiedad2, iglesia.fecha_propiedad_new2, iglesia.fecha_fin_new2, iglesia.tipo_propiedad3, iglesia.anombre_propiedad3, iglesia.fecha_propiedad_new3, iglesia.fecha_fin_new3, '1']).then(function(result) {
 			$scope.traerDatos();
 			toastr.success("Iglesia creada exitosamente.");
 			$scope.guardando_iglesia 	= false;
