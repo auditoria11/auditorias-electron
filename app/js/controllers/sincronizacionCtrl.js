@@ -98,54 +98,7 @@ angular.module("auditoriaApp")
       }
     };
 
-    $scope.crear_distrito = function() {
-      $scope.verCrearDistrito = true;
-
-      $timeout(function() {
-        $location.hash("nueva_new_new_distrito");
-        $anchorScroll();
-      }, 100);
-    };
-    $scope.cancelar_crear_distrito = function() {
-	  $scope.distrito_new = angular.copy($scope.tpl_distr);
-      $scope.verCrearDistrito = false;
-    };
-
-    $scope.insertar_distrito = function(distrito) {
-			console.log(distrito);
-			$scope.guardando_distrito 	= true;
-			$scope.pastor_new_id 		= null;
-			$scope.tesorero_new_id 		= null;
-
-			if (distrito.pastor) {
-				if (distrito.pastor.rowid) {
-					$scope.pastor_new_id = distrito.pastor.rowid;
-				}
-			}
-
-			if (distrito.tesorero) {
-				if (distrito.tesorero.rowid) {
-					$scope.tesorero_new_id = distrito.tesorero.rowid;
-				}
-			}
-
-			consulta = "INSERT INTO distritos(nombre, alias, codigo, zona, pastor_id, tesorero_id) VALUES(?,?,?,?,?,?)";
-
-			ConexionServ.query(consulta, [distrito.nombre,distrito.alias,distrito.codigo,distrito.zona,$scope.pastor_new_id,$scope.tesorero_new_id]).then(function(result) {
-				$scope.traerDatos();
-				toastr.success("Se ha creado un nuevo Distrito Exitosamente.");
-				$scope.guardando_distrito 	= false;
-				$scope.verCrearDistrito 	= false;
-			},function(tx) {
-				console.log("Error no es posbile traer Distritos", tx);
-				$scope.guardando_distrito 	= false;
-			});
-    };
-
-    $scope.crearI = function() {
-      $scope.vercrear = !$scope.vercrear;
-    };
-
+	
 
     $scope.subir_datos = function (elemento){
     	
@@ -249,11 +202,6 @@ angular.module("auditoriaApp")
 	}
 
 
-    $scope.modentidad = function(entidad) {
-      $scope.modentidades = !$scope.modentidades;
-      $scope.entidad_editar = entidad;
-    };
-
     // Traemos todos los datos que necesito para trabajar
     $scope.traerDatos = function() {
 			// Traemos USUARIOS
@@ -328,127 +276,10 @@ angular.module("auditoriaApp")
 			});
     };
 
-    $scope.traerDatos();    
-    $scope.Cancelar_Actualizar_Distrito = function() {
-      	$scope.VerActualizandoDistrito = false;
-    };
-
+	$scope.traerDatos();    
+	
   
 
-    $scope.Cancelar_Actualizar_Iglesia = function() {
-      	$scope.ver_Actualizando_iglesia = false;
-    };
-
-    $scope.Ver_actualizar_iglesia = function(iglesia) {
-			console.log(iglesia);
-			$scope.ver_Actualizando_iglesia = true;
-			$scope.iglesia_edit 			= iglesia;
-
-			for (var i = 0; i < $scope.distritos.length; i++) {
-				if (iglesia.distrito_id == $scope.distritos[i].rowid) {
-					$scope.iglesia_edit.distrito = $scope.distritos[i];
-				}
-			}
-
-			for (var i = 0; i < $scope.usuarios.length; i++) {
-				if (iglesia.tesorero_id == $scope.usuarios[i].rowid) {
-					$scope.iglesia_edit.tesorero = $scope.usuarios[i];
-				}
-				if (iglesia.secretario_id == $scope.usuarios[i].rowid) {
-					$scope.iglesia_edit.secretario = $scope.usuarios[i];
-				}
-			}
-			if ($scope.iglesia_edit.fecha_propiedad)
-				$scope.iglesia_edit.fecha_propiedad 	= new Date($scope.iglesia_edit.fecha_propiedad);
-			if ($scope.iglesia_edit.fecha_fin)
-				$scope.iglesia_edit.fecha_fin 			= new Date($scope.iglesia_edit.fecha_fin);
-			if ($scope.iglesia_edit.fecha_propiedad2)
-				$scope.iglesia_edit.fecha_propiedad2 	= new Date($scope.iglesia_edit.fecha_propiedad2);
-			if ($scope.iglesia_edit.fecha_fin2)
-				$scope.iglesia_edit.fecha_fin2 			= new Date($scope.iglesia_edit.fecha_fin2);
-			if ($scope.iglesia_edit.fecha_propiedad3)
-				$scope.iglesia_edit.fecha_propiedad3 	= new Date($scope.iglesia_edit.fecha_propiedad3);
-			if ($scope.iglesia_edit.fecha_fin3)
-				$scope.iglesia_edit.fecha_fin3 			= new Date($scope.iglesia_edit.fecha_fin3);
-
-			$timeout(function() {
-				$location.hash("editar-iglesia");
-				$anchorScroll();
-			}, 100);
-    };
-
-    
-
-   
-
-    $scope.VerCreandoIglesia = function() {
-		$scope.ver_creando_iglesia = true;
-
-		$timeout(function() {
-			$location.hash("nueva_new_new_iglesia");
-			$anchorScroll();
-		}, 100);
-    };
-
-    $scope.cancelar_crear_iglesia = function() {
-		$scope.ver_creando_iglesia = false;
-		$scope.iglesia_new = angular.copy($scope.tpl_igle);
-    };
-
-   
-
-    $scope.CancelarCrearUnion = function() {
-      $scope.verCreandoUniones = false;
-    };
-
-    $scope.verCrearUnion = function() {
-		$scope.verCreandoUniones = true;
-
-		$timeout(function() {
-			$location.hash("nueva_new_new_union");
-			$anchorScroll();
-		}, 100);
-    };
-
-   
-    $scope.VerActualizarUniones = function(union) {
-		$scope.VeractualizandoUniones = true;
-
-		$scope.union_creatar_new = union;
-
-		$timeout(function() {
-			$location.hash("editar-uniones");
-			$anchorScroll();
-		}, 100);
-    };
-
-    $scope.CancelarActualizarUniones = function() {
-      	$scope.VeractualizandoUniones = false;
-    };
-
-    
-
-    $scope.Insertar_asociaciones = function(creater_asociaciones) {
-		console.log(creater_asociaciones);
-		consulta = "INSERT INTO asociaciones(nombre, alias, codigo, union_id) VALUES(?,?,?,?)";
-
-		ConexionServ.query(consulta, [ creater_asociaciones.nombre, creater_asociaciones.alias, creater_asociaciones.codigo, creater_asociaciones.union.rowid ]).then( function(result) {
-			$scope.traerDatos();
-			toastr.success("Se ha creado una Nueva asocación  Exitosamente.");
-		}, function(tx) {
-			console.log("Error no es posbile traer asocaciones", tx);
-    	});
-    };
-
-    
-
-    $scope.CancelarVerCreandoAsoaciones = function() {
-      	$scope.MostrandoAsociaciones = false;
-    };
-
-    $scope.CancelarVerActualizarAsociaciones = function() {
-      	$scope.VerActualizandoAsociaciones = false;
-	};
 	
 	
 })
