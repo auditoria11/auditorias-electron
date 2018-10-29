@@ -19,8 +19,8 @@ angular.module('auditoriaApp')
 
 	  	
 
-	 	consulta ="INSERT INTO respuestas(pregunta_id, auditoria_id, respuestas ) VALUES(?, ?, ?) "
-	   ConexionServ.query(consulta, [respuestas_crear.pregunta_id, respuestas_crear.auditoria_id, respuestas_crear.respuestas]).then(function(result){
+	 	consulta ="INSERT INTO respuestas(pregunta_id, auditoria_id, respuestas, modificado ) VALUES(?, ?, ?, ?) "
+	   ConexionServ.query(consulta, [respuestas_crear.pregunta_id, respuestas_crear.auditoria_id, respuestas_crear.respuestas, '1']).then(function(result){
 
            console.log('respuesta creada', result)
            alert('respuesta creado exitosamente, presiona F5 Para recargar')
@@ -35,15 +35,15 @@ angular.module('auditoriaApp')
 
 	  $scope.vermostrandotablarespuestas = function(){
 
-	   consulta = "SELECT  re.*, re.rowid, p.definition, p.tipo ,  a.fecha, a.hora, a.entidad, e.nombres  " + 
+	   consulta = "SELECT  re.*, re.rowid, p.definition, p.tipo ,  a.fecha, a.hora" + 
 	   				"from respuestas re " + 
 	   				"INNER JOIN preguntas p ON re.pregunta_id = p.rowid " + 
-	   				"INNER JOIN auditorias a ON re.auditoria_id = a.rowid  "+ 
-	   				"INNER JOIN entidades e ON a.entidad = e.rowid  ";
+	   				"INNER JOIN auditorias a ON re.auditoria_id = a.rowid  ";
 	   
 	   ConexionServ.query(consulta, []).then(function(result){
 	   		console.log(result);
 	          $scope.respuestas = result;
+	          console.log( $scope.respuestas)
 
 		   } , function(tx){
 
@@ -111,8 +111,8 @@ angular.module('auditoriaApp')
 
   $scope.acrepuasd = function(respuesta_cambiar){
 	  	
-	 consulta ="UPDATE  respuestas SET pregunta_id=?, auditoria_id=?, respuestas=? WHERE rowid=? "
-	   ConexionServ.query(consulta,[respuesta_cambiar.pregunta_id, respuesta_cambiar.auditoria_id, respuesta_cambiar.respuestas, respuesta_cambiar.rowid, ]).then(function(result){
+	 consulta ="UPDATE  respuestas SET pregunta_id=?, auditoria_id=?, respuestas=?, modificado=? WHERE rowid=? "
+	   ConexionServ.query(consulta,[respuesta_cambiar.pregunta_id, respuesta_cambiar.auditoria_id, respuesta_cambiar.respuestas, respuesta_cambiar.rowid, '1' ]).then(function(result){
 
            console.log('respuesta Actualizado', result)
            alert('respuesta actualizado correctamente presione F5 para recargar')
@@ -127,19 +127,17 @@ angular.module('auditoriaApp')
 
 	 $scope.elimninarespuestas = function(respuesta){
 	  	
-	 	consulta ="DELETE FROM respuestas WHERE rowid=? ";
+	 		var res = confirm("¿Seguro que desea eliminar ? ");
 
-	   ConexionServ.query(consulta,[respuesta.rowid]).then(function(result){
-
-
-           console.log('respuesta eliminido', result);
-           $scope.respuestas = $filter('filter') ($scope.respuestas, {rowid: '!' + respuesta.rowid})
-	   } , function(tx){
-
-	   	console.log('respuesta no se pudo Eliminar' , tx)
-
-	   });
-
+		if (res == true) {
+			consulta = "UPDATE  respuestas SET eliminado=? WHERE rowid=? ";
+		ConexionServ.query(consulta, ['1', union.rowid]).then( function(result) {
+			console.log("respuestas Eliminada", result);
+			toastr.success("respuestas Eliminada Exitosamente.");
+		},function(tx) {
+			toastr.info("La respuestas que intenta eliminar no se pudo actualizar.");
+		});
+	}
 	 } 
 
 

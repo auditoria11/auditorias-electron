@@ -28,8 +28,8 @@ $scope.veractpregunta = function(pregunta){
 
 
 	  	
-	 	consulta ="INSERT INTO preguntas(definition, tipo, option1 ,option2, option3, option4, auditoria ) VALUES(?, ?, ?, ?, ?, ?, ?) "
-	   ConexionServ.query(consulta, [pregunta_crear.definition, pregunta_crear.tipo, pregunta_crear.option1, pregunta_crear.option2, pregunta_crear.option3, pregunta_crear.option4, pregunta_crear.auditoria]).then(function(result){
+	 	consulta ="INSERT INTO preguntas(definition, tipo, option1 ,option2, option3, option4, auditoria_id, modificado) VALUES(?, ?, ?, ?, ?, ?, ?, ?) "
+	   ConexionServ.query(consulta, [pregunta_crear.definition, pregunta_crear.tipo, pregunta_crear.option1, pregunta_crear.option2, pregunta_crear.option3, pregunta_crear.option4, pregunta_crear.auditoria,  '1']).then(function(result){
 
            console.log('pregunta creada', result)
            alert('pregunta creado exitosamente, presiona F5 Para recargar')
@@ -54,7 +54,7 @@ $scope.veractpregunta = function(pregunta){
 	   $scope.vertablapreguntarosmostrar = function(){
 
 	    
-	   ConexionServ.query("SELECT p.*, p.rowid, a.fecha, a.hora, a.entidad, e.nombres, e.alias from preguntas p INNER JOIN auditorias a ON p.auditoria = a.rowid  INNER JOIN entidades e ON a.entidad = e.rowid"
+	   ConexionServ.query("SELECT p.* from preguntas p INNER JOIN auditorias a ON p.auditoria = a.rowid  INNER JOIN entidades e ON a.entidad = e.rowid"
          
 	   	, []).then(function(result){
 
@@ -67,7 +67,15 @@ $scope.veractpregunta = function(pregunta){
 		   })
 
  
+	   	$scope.traerDatos = function() {
+	   		consulta = "SELECT rowid, * from preguntas ";
 
+			ConexionServ.query(consulta, []).then(function(result) {
+				$scope.preguntas = result;
+			},function(tx) {
+				console.log("Error no es posbile traer preguntas", tx);
+			});
+	   	};
 
 
 	   ConexionServ.query('SELECT *, rowid from auditorias', []).then(function(result){
@@ -126,18 +134,17 @@ $scope.veractpregunta = function(pregunta){
 
 	  $scope.elimninpreguntas = function(pregunta){
 	  	
-	 	consulta ="DELETE FROM preguntas WHERE rowid=? ";
+	 	var res = confirm("¿Seguro que desea eliminar ? ");
 
-	   ConexionServ.query(consulta,[pregunta.rowid]).then(function(result){
-
-
-           console.log('pregunta eliminido', result);
-           $scope.preguntas = $filter('filter') ($scope.preguntas, {rowid: '!' + pregunta.rowid})
-	   } , function(tx){
-
-	   	console.log('pregunta no se pudo Eliminar' , tx)
-
-	   });
+		if (res == true) {
+			consulta = "UPDATE  preguntas SET eliminado=? WHERE rowid=? ";
+		ConexionServ.query(consulta, ['1', union.rowid]).then( function(result) {
+			console.log("pregunta Eliminada", result);
+			toastr.success("pregunta Eliminada Exitosamente.");
+		},function(tx) {
+			toastr.info("La pregunta que intenta eliminar no se pudo actualizar.");
+		});
+	}
 
 	 } 
 

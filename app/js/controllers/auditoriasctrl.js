@@ -50,8 +50,8 @@ angular.module('auditoriaApp')
 		hora_fix = new Date(audit.hora);
 		hora_fix = '' + audit.hora.getHours() + ':' + audit.hora.getMinutes() + ':' + audit.hora.getSeconds() ;
 
-	 	consulta ="INSERT INTO auditorias(fecha, hora, iglesia_id, saldo_ant) VALUES(?,?,?,?) "
-		ConexionServ.query(consulta,[fecha_fix, hora_fix, audit.iglesia.rowid, audit.saldo_ant]).then(function(result){
+	 	consulta ="INSERT INTO auditorias(fecha, hora, iglesia_id, saldo_ant, modificado) VALUES(?,?,?,?,?) "
+		ConexionServ.query(consulta,[fecha_fix, hora_fix, audit.iglesia.rowid, audit.saldo_ant, '1']).then(function(result){
 
 			console.log('Auditoria creada', result);
 			$scope.verMostrarAuditoriasTabla();

@@ -126,7 +126,7 @@ angular.module("auditoriaApp")
 
 	$scope.cambiaValor = function(libro, columna) {
 
-		consulta 	= 'UPDATE lib_mensuales SET ' + columna + '=? WHERE rowid=?';
+		consulta 	= 'UPDATE lib_mensuales SET ' + columna + '=?, modificado=1 WHERE rowid=?';
 		colum 		= columna.charAt(0).toUpperCase() + columna.slice(1);
 		
 		ConexionServ.query(consulta, [libro[columna], libro.rowid]).then(function(){
@@ -164,9 +164,13 @@ angular.module("auditoriaApp")
   		mes_temp 	= libro_new.mes[0];
 
 
-		consulta 	= 'INSERT INTO lib_mensuales(year, mes, auditoria_id, diezmos, ofrendas, especiales, remesa_enviada) VALUES(?,?,?,?,?,?,?)';
+		consulta 	= 'INSERT INTO lib_mensuales(year, mes, auditoria_id, diezmos, ofrendas, especiales, remesa_enviada, modificado) VALUES(?,?,?,?,?,?,?,?)';
 		
-		ConexionServ.query(consulta, [year_temp, mes_temp, $scope.USER.auditoria_id,0,0,0,0]).then(function(result) {
+		datos = [year_temp, mes_temp, $scope.USER.auditoria_id,0,0,0,0,'1'];
+
+		console.log(consulta, datos);
+
+		ConexionServ.query(consulta, datos).then(function(result) {
 
 			consulta 	= 'INSERT INTO lib_semanales(libro_mes_id) VALUES(?)';
 			ConexionServ.query(consulta, [result.insertId]).then(function(result) {
@@ -203,7 +207,7 @@ angular.module("auditoriaApp")
 			$scope.lib_meses 	= [];
 
 			consulta 	= 'SELECT m.*, m.rowid, s.*, s.rowid as lib_semanal_id FROM lib_mensuales m ' + 
-						'INNER JOIN lib_semanales s ON m.rowid=s.libro_mes_id';
+						'INNER JOIN lib_semanales s ON m.rowid=s.libro_mes_id and m.eliminado is null';
 			
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.lib_meses = result;
@@ -240,7 +244,7 @@ angular.module("auditoriaApp")
 
 		if (res == true) {
 
-		 	consulta ="DELETE FROM lib_mensuales WHERE rowid=? ";
+		 	consulta ="UPDATE lib_mensuales SET eliminado=1 WHERE rowid=? ";
 
 			ConexionServ.query(consulta,[lib_mens.rowid]).then(function(result){
 
@@ -257,7 +261,7 @@ angular.module("auditoriaApp")
 
 	$scope.cambiaSaldoAnterior = function(usu) {
 
-		consulta 	= 'UPDATE auditorias SET saldo_ant=? WHERE rowid=?';
+		consulta 	= 'UPDATE auditorias SET saldo_ant=?, modificado=1 WHERE rowid=?';
         
 		ConexionServ.query(consulta, [usu.saldo_ant, usu.iglesia_audit_id]).then(function(){
 			toastr.success('Saldo guardado');

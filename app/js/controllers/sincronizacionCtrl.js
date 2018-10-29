@@ -2,7 +2,7 @@
 
 angular.module("auditoriaApp")
 
-.controller("sincronizacionCtrl", function($scope, ConexionServ, $filter, toastr, $location, $anchorScroll, $timeout, $uibModal,  $http, rutaServidor) {
+.controller("sincronizacionCtrl", function($scope, ConexionServ, $filter, toastr, $location, $anchorScroll, $timeout, $uibModal,  $http, rutaServidor, SincronizarServ) {
 	$scope.entidades = true;
     $scope.distrito_new = {};
     $scope.modentidades = false;
@@ -34,6 +34,11 @@ angular.module("auditoriaApp")
 	$scope.ver_asociaciones = false;
 	$scope.ver_distritos 	= false;
 	$scope.ver_iglesias 	= false;
+	$scope.ver_usuarios     = false;
+	$scope.ver_auditorias 	= false;
+	$scope.ver_libromes 	= false;
+	$scope.ver_preguntas 	= false;
+	$scope.ver_respuestas 	= false;
 	
 	$scope.toggleUniones = ()=>{
 		$scope.ver_uniones = !$scope.ver_uniones;
@@ -46,6 +51,21 @@ angular.module("auditoriaApp")
 	}
 	$scope.toggleIglesias = ()=>{
 		$scope.ver_iglesias = !$scope.ver_iglesias;
+	}
+	$scope.toggleusuarios = ()=>{
+		$scope.ver_usuarios = !$scope.ver_usuarios;
+	}
+	$scope.toggleauditorias = ()=>{
+		$scope.ver_auditorias = !$scope.ver_auditorias;
+	}
+	$scope.togglelibromes = ()=>{
+		$scope.ver_libromes = !$scope.ver_libromes;
+	}
+	$scope.togglepreguntas = ()=>{
+		$scope.ver_preguntas = !$scope.ver_preguntas;
+	}
+	$scope.togglerespuestas = ()=>{
+		$scope.ver_respuestas = !$scope.ver_respuestas;
 	}
 	
 
@@ -109,28 +129,33 @@ angular.module("auditoriaApp")
     	}else{
     		datos = {
     			iglesias: 			$scope.iglesias,
-    			distritos: 			scope.distritos,
+    			distritos: 			$scope.distritos,
     			asociaciones: 		$scope.asociaciones,
-    			iglesias: $scope.iglesias,
-    			iglesias: $scope.iglesias
+    			auditorias: 		$scope.auditorias,
+    			uniones: 			$scope.uniones,
+    			usuarios: 			$scope.usuarios,
+    			lib_mensuales: 		$scope.lib_mensuales,
+    			preguntas: 			$scope.preguntas,
+    			respuestas: 		$scope.respuestas
     		};
     	}
 
-		$http.put(rutaServidor.ruta + '/subir-datos', datos).then (function(result){
+		$http.put(rutaServidor.ruta + '/subir-datos', datos).then (function(r){
 
-			for (var i = 0; i < auditorias.length; i++) {
-			 	auditorias[i] 
+			r = r.data;
+			SincronizarServ.uniones(r.uniones);
+			SincronizarServ.asociaciones(r.asociaciones);
+			SincronizarServ.distritos(r.distritos);
+            SincronizarServ.iglesias(r.iglesias);
+            SincronizarServ.usuarios(r.usuarios);
+            SincronizarServ.auditorias(r.auditorias);
+            SincronizarServ.lib_mensuales(r.lib_mensuales);
+            SincronizarServ.preguntas(r.preguntas);
+            SincronizarServ.respuestas(r.respuestas);
 
-			 
-				consulta = 'INSERT INTO auditorias (rowid, id, fecha, saldo_ant, iglesia_id) VALUES(?, ?, ?, ?, ?)'
-					ConexionServ.query(consulta, [auditorias[i].id, auditorias[i].id, auditorias[i].fecha, auditorias[i].saldo_ant, auditorias[i].iglesia_id]).then(function(result){
-						console.log('se cargo auditorias', result);
-					
-					}, function(tx){
-						console.log('error', tx);
-					});
-			 }
-			 toastr.success();
+
+
+			 toastr.success('Datos subidos');
 		}, function(){
 			toastr.error('No se pudo subir datos');
 		})
@@ -145,6 +170,9 @@ angular.module("auditoriaApp")
 			iglesias = result.data.iglesias;
 			uniones = result.data.uniones;
 			distritos = result.data.distritos;
+			usuarios = result.data.usuarios;
+			auditorias = result.data.auditorias;
+			lib_mensuales = result.data.lib_mensuales;
 
 			for (var i = 0; i < auditorias.length; i++) {
 			 	auditorias[i] 
@@ -205,7 +233,7 @@ angular.module("auditoriaApp")
     // Traemos todos los datos que necesito para trabajar
     $scope.traerDatos = function() {
 			// Traemos USUARIOS
-			consulta = "SELECT rowid, nombres, apellidos, sexo, tipo, celular, username from usuarios";
+			consulta = "SELECT rowid, * from usuarios where modificado=1 or eliminado=1";
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.usuarios = result;
@@ -214,21 +242,8 @@ angular.module("auditoriaApp")
 			});
 
 			// Traemos IGLESIAS
-			/*
 			$scope.consulta_igle =
-				"SELECT i.rowid, i.nombre, i.alias, i.distrito_id, i.zona, d.nombre as distrito_nombre, i.tesorero_id, i.secretario_id, " +
-					"t.nombres as tesorero_nombres, t.apellidos as tesorero_apellidos, i.tipo, " + 
-					"i.tipo_propiedad, i.anombre_propiedad, i.fecha_propiedad, i.fecha_fin, " + 
-					"i.tipo_propiedad2, i.anombre_propiedad2, i.fecha_propiedad2, i.fecha_fin2, " + 
-					"i.tipo_propiedad3, i.anombre_propiedad3, i.fecha_propiedad3, i.fecha_fin3 " + 
-				"FROM iglesias i " +
-				"LEFT JOIN distritos d ON d.rowid=i.distrito_id " +
-				"LEFT JOIN usuarios t ON t.tipo='Tesorero' and t.rowid=i.tesorero_id where i.modificado= '1'  or eliminado=1 ";
-			*/
-
-			$scope.consulta_igle =
-				"SELECT i.rowid, i.nombre, i.alias, i.distrito_id, i.zona, i.tesorero_id, i.modificado, i.eliminado " +
-				"FROM iglesias i " +
+				"SELECT i.rowid, i.* FROM iglesias i " +
 				"where i.modificado= '1'  or eliminado=1 ";
 
 
@@ -242,13 +257,6 @@ angular.module("auditoriaApp")
 			});
 
 			// Traemos DISTRITOS
-			consulta = "SELECT d.rowid, d.*, p.nombres as pastor_nombres, p.apellidos as pastor_apellidos, " +
-					"p.nombres as pastor_nombres, p.apellidos as pastor_apellidos, " +
-					"t.nombres as tesorero_nombres, t.apellidos as tesorero_apellidos " +
-				"FROM distritos d " +
-				"LEFT JOIN usuarios t ON t.tipo='Tesorero' and t.rowid=d.tesorero_id " +
-				"LEFT JOIN usuarios p ON p.tipo='Pastor' and p.rowid=d.pastor_id ";
-
 			consulta = "SELECT d.rowid, d.* from distritos d WHERE d.modificado=1 or eliminado=1 or id is null " ;
 
 			ConexionServ.query(consulta, []).then(function(result) {
@@ -258,7 +266,7 @@ angular.module("auditoriaApp")
 			});
 
 			// Traemos Uniones
-			consulta = "SELECT rowid, nombre, alias, codigo, division_id from uniones un WHERE un.modificado=1 or eliminado=1 or id is null";
+			consulta = "SELECT rowid, * from uniones un WHERE un.modificado=1 or eliminado=1 or id is null";
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.uniones = result;
@@ -274,6 +282,50 @@ angular.module("auditoriaApp")
 			}, function(tx) {
 				console.log("Error no es posbile traer asociaciones", tx);
 			});
+
+			// Traemos Auditoria
+			consulta = "SELECT rowid, * from auditorias where auditorias.modificado=1 or auditorias.eliminado=1";
+
+			ConexionServ.query(consulta, []).then(function(result) {
+				$scope.auditorias = result;
+			},function(tx) {
+				console.log("Error no es posbile traer auditorias", tx);
+			});
+
+
+			consulta = "SELECT rowid, * from lib_mensuales libm where libm.modificado=1 or libm.eliminado=1";
+
+			ConexionServ.query(consulta, []).then(function(result) {
+				$scope.lib_mensuales = result;
+			},function(tx) {
+				console.log("Error no es posbile traer libromes", tx);
+			});
+
+			consulta = "SELECT rowid, * from preguntas preg where preg.modificado=1 or preg.eliminado=1";
+
+			ConexionServ.query(consulta, []).then(function(result) {
+				$scope.preguntas = result;
+			},function(tx) {
+				console.log("Error no es posbile traer preguntas", tx);
+			});
+
+			consulta = "SELECT rowid, * from respuestas res where res.modificado=1 or res.eliminado=1";
+
+			ConexionServ.query(consulta, []).then(function(result) {
+				$scope.respuestas = result;
+			},function(tx) {
+				console.log("Error no es posbile traer respuestas", tx);
+			});
+
+
+			/*
+			consulta = "SELECT rowid, * from respuestas where res.modificado=1 or res.elimiado=1";
+
+			ConexionServ.query(consulta, []).then(function(result) {
+				$scope.respuestas = result;
+			},function(tx) {
+				console.log("Error no es posbile traer respuestas", tx);
+			});*/
     };
 
 	$scope.traerDatos();    
@@ -283,6 +335,9 @@ angular.module("auditoriaApp")
 	
 	
 })
+
+
+
 
 
 

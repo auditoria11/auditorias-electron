@@ -133,13 +133,17 @@ angular.module('auditoriaApp')
                 "total_diezmos integer  DEFAULT 0 ," +  // Diezmos recogidos del mes, no por sábados
                 "total_ofrendas integer  DEFAULT 0 ," +  // Ofrendas recogidas del mes, no por sábados
                 "total_especiales integer  DEFAULT 0 ," +  // Ofrendas especiales recogidas del mes, no por sábados
-                "por_total integer  DEFAULT 0 )"; // 0 o 1. Si es por total, se ignoran los valores de los 5 sábados
+                "por_total integer  DEFAULT 0 ," +
+                "modificado varchar(100)  DEFAULT NULL collate nocase," +
+                "eliminado integer  DEFAULT '0' )" ; // 0 o 1. Si es por total, se ignoran los valores de los 5 sábados
 
     // Obligaciones fijas que tiene la iglesia mensuales
     sqlDestinos = "CREATE TABLE IF NOT EXISTS destinos (id integer," +
                 "iglesia_id integer  NOT NULL," +
                 "nombre varchar(250)  NOT NULL collate nocase," +
-                "descripcion varchar(250)  DEFAULT NULL collate nocase )";
+                "descripcion varchar(250)  DEFAULT NULL collate nocase ," +
+                "modificado varchar(100)  DEFAULT NULL collate nocase," +
+                "eliminado integer  DEFAULT '0' )";
 
 
     // Pagos que ha hecho la iglesia en ese mes en los destinos fijos
@@ -148,7 +152,9 @@ angular.module('auditoriaApp')
                 "libro_mes_id integer  NOT NULL," +
                 "pago integer  NOT NULL," +
                 "fecha varchar(100)  DEFAULT NULL collate nocase," +
-                "descripcion varchar(250)  DEFAULT NULL collate nocase )";
+                "descripcion varchar(250)  DEFAULT NULL collate nocase ," +
+                "modificado varchar(100)  DEFAULT NULL collate nocase," +
+                "eliminado integer  DEFAULT '0')";
 
     /*
     // Sumatorias de las facturas que tiene la iglesia por mes
@@ -162,7 +168,9 @@ angular.module('auditoriaApp')
     sqlGastosMes = "CREATE TABLE IF NOT EXISTS gastos_mes (id integer," +
                 "libro_mes_id integer  NOT NULL," +
                 "valor integer  NOT NULL," +
-                "descripcion varchar(250)  DEFAULT NULL collate nocase )";
+                "descripcion varchar(250)  DEFAULT NULL collate nocase ," +
+                "modificado varchar(100)  DEFAULT NULL collate nocase," +
+                "eliminado integer  DEFAULT '0')";
 
     sqlpreguntas = "CREATE TABLE IF NOT EXISTS preguntas (id integer," +
                 "definition varchar(100)  NOT NULL collate nocase," +
@@ -171,14 +179,18 @@ angular.module('auditoriaApp')
                 "option2 varchar(100)  NOT NULL, " +
                 "option3 varchar(100)  NOT NULL, " +
                 "option4 varchar(100)  NOT NULL, " +
-                "auditoria varchar(100) NOT NULL ) ";   
+                "auditoria_id varchar(100) NOT NULL, " +
+                "modificado varchar(100)  DEFAULT NULL collate nocase," +
+                "eliminado integer  DEFAULT '0')";   
 
 
 
     sqlrespuestas = "CREATE TABLE IF NOT EXISTS respuestas (id integer," +
                 "pregunta_id varchar(100)  NOT NULL collate nocase," +
                 "auditoria_id varchar(100)  DEFAULT NULL collate nocase," +
-                "respuestas varchar(100)  NOT NULL )";       
+                "respuestas varchar(100)  NOT NULL, " +
+                "modificado varchar(100)  DEFAULT NULL collate nocase," +
+                "eliminado integer  DEFAULT '0')";       
 
            
 
