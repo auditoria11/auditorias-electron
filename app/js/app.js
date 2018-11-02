@@ -100,6 +100,12 @@ angular.module('auditoriaApp', [
 		templateUrl: 'templates/sincronizacion.html'
 	})
 
+	.state('panel.recomendaciones', {
+		url: '/recomendaciones',
+		controller: 'recomendacionesCtrl',
+		templateUrl: 'templates/recomendaciones.html'
+	})
+
 
 
 	.state('panel.informe.asociaciones', {
@@ -107,6 +113,8 @@ angular.module('auditoriaApp', [
 		controller: 'informesAsociacionesCtrl',
 		templateUrl: 'templates/informes/todas-asociaciones.html'
 	})
+
+
 
 	.state('panel.informe.distritos', {
 		url: '/Distritos',

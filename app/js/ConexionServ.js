@@ -17,6 +17,15 @@ angular.module('auditoriaApp')
                 "eliminado integer  DEFAULT '0'," +
                 "division_id integer DEFAULT NULL)"; // Tesorero del distrito
 
+   sqlRecomendaciones = "CREATE TABLE IF NOT EXISTS recomendaciones (id integer, " +
+                "recomendacion varchar(200)  NOT NULL collate nocase, " +
+                "justificacion varchar(100)  DEFAULT NULL collate nocase, " +
+                "superada integer DEFAULT NULL, " +
+                "fecha varchar(100)  DEFAULT NULL collate nocase, " +
+                "modificado varchar(100)  DEFAULT NULL collate nocase, " +
+                "eliminado integer  DEFAULT '0' )";
+                
+
     sqlAsociaciones = "CREATE TABLE IF NOT EXISTS asociaciones (id integer," +
                 "nombre varchar(200)  NOT NULL collate nocase," +
                 "alias varchar(100)  DEFAULT NULL collate nocase," +
@@ -106,6 +115,9 @@ angular.module('auditoriaApp')
                 "modificado varchar(100)  DEFAULT NULL collate nocase," +
                 "eliminado varchar(100)  DEFAULT NULL collate nocase," +                
                 "remesa_enviada integer  DEFAULT 0 )";
+
+
+
 
     // Dinero recogido en los 5 o 4 sábados del mes. Puede especificar por sábado o por total
     sqlLibSem = "CREATE TABLE IF NOT EXISTS lib_semanales (id integer," +
@@ -211,6 +223,13 @@ angular.module('auditoriaApp')
                     defered.resolve('Distritos Tabla creada');
                 }, function(tx,error){
                     console.log("Distritos Tabla No se pudo crear", error.message);
+                })
+
+                tx.executeSql( sqlRecomendaciones, [], function (tx, result) {
+                    // console.log('Distritos Tabla creada');
+                    defered.resolve('Recomendaciones Tabla creada');
+                }, function(tx,error){
+                    console.log("Recomendaciones Tabla No se pudo crear", error.message);
                 })
                 
                 tx.executeSql(sqlIglesias, [], function (tx, result) {
