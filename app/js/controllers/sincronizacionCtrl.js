@@ -39,6 +39,7 @@ angular.module("auditoriaApp")
 	$scope.ver_libromes 	= false;
 	$scope.ver_preguntas 	= false;
 	$scope.ver_respuestas 	= false;
+	$scope.ver_recomendaciones 	= false;
 	
 	$scope.toggleUniones = ()=>{
 		$scope.ver_uniones = !$scope.ver_uniones;
@@ -66,6 +67,9 @@ angular.module("auditoriaApp")
 	}
 	$scope.togglerespuestas = ()=>{
 		$scope.ver_respuestas = !$scope.ver_respuestas;
+	}
+	$scope.togglerecomendaciones = ()=>{
+		$scope.ver_recomendaciones = !$scope.ver_recomendaciones;
 	}
 	
 
@@ -136,7 +140,8 @@ angular.module("auditoriaApp")
     			usuarios: 			$scope.usuarios,
     			lib_mensuales: 		$scope.lib_mensuales,
     			preguntas: 			$scope.preguntas,
-    			respuestas: 		$scope.respuestas
+    			respuestas: 		$scope.respuestas,
+    			recomendaciones: 	$scope.recomendaciones
     		};
     	}
 
@@ -152,6 +157,7 @@ angular.module("auditoriaApp")
             SincronizarServ.lib_mensuales(r.lib_mensuales);
             SincronizarServ.preguntas(r.preguntas);
             SincronizarServ.respuestas(r.respuestas);
+            SincronizarServ.recomendaciones(r.recomendaciones);
 
 
 
@@ -173,6 +179,9 @@ angular.module("auditoriaApp")
 			usuarios = result.data.usuarios;
 			auditorias = result.data.auditorias;
 			lib_mensuales = result.data.lib_mensuales;
+			recomendaciones = result.data.recomendaciones;
+			preguntas = result.data.preguntas;
+			respuestas = result.data.respuestas;
 
 			for (var i = 0; i < auditorias.length; i++) {
 			 	auditorias[i] 
@@ -215,6 +224,17 @@ angular.module("auditoriaApp")
 				consulta = 'INSERT INTO uniones (id, nombre, alias, codigo) VALUES(?, ?, ?, ?)'
 				ConexionServ.query(consulta, [uniones[i].id, uniones[i].nombre, uniones[i].alias, uniones[i].codigo]).then(function(result){
 					console.log('se guardo la carrera papi', result);
+					
+				}, function(tx){
+					console.log('error', tx);
+				});
+			} 
+
+			for (var i = 0; i < recomendaciones.length; i++) {
+
+				consulta = 'INSERT INTO recomendaciones (id, auditoria_id, recomendacion, justificacion, superada, fecha, modificado) VALUES(?, ?, ?, ?, ?, ?, 0)'
+				ConexionServ.query(consulta, [recomendaciones[i].id, recomendaciones[i].auditoria_id, recomendaciones[i].recomendacion, recomendaciones[i].justificacion, recomendaciones[i].superada, recomendaciones[i].fecha]).then(function(result){
+					console.log('se guardo la recomendacion papi', result);
 					
 				}, function(tx){
 					console.log('error', tx);
@@ -315,6 +335,14 @@ angular.module("auditoriaApp")
 				$scope.respuestas = result;
 			},function(tx) {
 				console.log("Error no es posbile traer respuestas", tx);
+			});
+
+			consulta = "SELECT rowid, * from recomendaciones rec where id is null or rec.modificado=1 or rec.eliminado=1";
+
+			ConexionServ.query(consulta, []).then(function(result) {
+				$scope.recomendaciones = result;
+			},function(tx) {
+				console.log("Error no es posbile traer recomendaciones", tx);
 			});
 
 

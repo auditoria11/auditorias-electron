@@ -18,10 +18,11 @@ angular.module('auditoriaApp')
                 "division_id integer DEFAULT NULL)"; // Tesorero del distrito
 
    sqlRecomendaciones = "CREATE TABLE IF NOT EXISTS recomendaciones (id integer, " +
-                "recomendacion varchar(200)  NOT NULL collate nocase, " +
-                "justificacion varchar(100)  DEFAULT NULL collate nocase, " +
-                "superada integer DEFAULT NULL, " +
+                "recomendacion text  NOT NULL collate nocase, " +
+                "justificacion text  DEFAULT NULL collate nocase, " +
+                "superada integer(1) DEFAULT '0', " +
                 "fecha varchar(100)  DEFAULT NULL collate nocase, " +
+                "auditoria_id integer DEFAULT NULL," +
                 "modificado varchar(100)  DEFAULT NULL collate nocase, " +
                 "eliminado integer  DEFAULT '0' )";
                 

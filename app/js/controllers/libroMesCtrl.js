@@ -1,6 +1,6 @@
 angular.module("auditoriaApp")
 
-.controller("libroMesCtrl", function($scope, ConexionServ, $filter, $uibModal, toastr, AuthServ) {
+.controller("libroMesCtrl", function($scope, ConexionServ, $filter, $uibModal, toastr, AuthServ, $timeout, 	$location, $anchorScroll ) {
 
 	
 	$scope.entidades 				= true;
@@ -12,7 +12,7 @@ angular.module("auditoriaApp")
 	$scope.verCrearDistrito = false;
 	$scope.usuarios 		= [];
 	$scope.verCrearLibroMensual = false;
-	
+	$scope.vercomends = false;
 	
 	$scope.meses = [
 		{num: 0, mes: 'Enero'},
@@ -62,6 +62,21 @@ angular.module("auditoriaApp")
 	
 
 
+    $scope.funcvercomend = function() {
+    	if ($scope.vercomends == true) {
+    		$scope.vercomends = false;
+    	}else{
+    		$scope.vercomends = true;
+    	}
+
+
+		$scope.traerrecos();
+
+		$timeout(function() {
+			$location.hash("nueva_new_new_union");
+			$anchorScroll();
+		}, 100);
+    };
 
 	$scope.abrirLibroSemanal = function(libro_mes) {
 
@@ -236,6 +251,30 @@ angular.module("auditoriaApp")
 			console.log("Error trayendo gastos de mes, ", lib_mes, tx);
 		});
 	}
+
+
+	$scope.traerrecos = function () {
+		consulta 	= 'SELECT tr.*, tr.rowid FROM recomendaciones tr WHERE tr.id=?';
+		
+		ConexionServ.query(consulta, [$scope.USER.auditoria_id]).then(function(result) {
+
+			for (var i = result.length - 1; i >= 0; i--) {
+
+				if (result[i].superada == 0) {
+					result[i].superada = "no"
+				}else{result[i].superada = "sí"}
+				
+			}
+
+			
+			console.log(result);
+	
+			$scope.Recomendaciones = result;
+		}, function(tx) {
+			console.log("Error trayendo recomendaciones, ", trec, tx);
+		});
+	}
+
 
 
    	$scope.EliminarLibroMensul = function(lib_mens){

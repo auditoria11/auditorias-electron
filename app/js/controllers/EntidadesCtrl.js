@@ -522,9 +522,9 @@ angular.module("auditoriaApp")
 
     $scope.Insertar_asociaciones = function(creater_asociaciones) {
 		console.log(creater_asociaciones);
-		consulta = "INSERT INTO asociaciones(nombre, alias, codigo, union_id) VALUES(?,?,?,?)";
+		consulta = "INSERT INTO asociaciones(nombre, alias, codigo, union_id, modificado) VALUES(?,?,?,?,?)";
 
-		ConexionServ.query(consulta, [ creater_asociaciones.nombre, creater_asociaciones.alias, creater_asociaciones.codigo, creater_asociaciones.union.rowid ]).then( function(result) {
+		ConexionServ.query(consulta, [ creater_asociaciones.nombre, creater_asociaciones.alias, creater_asociaciones.codigo, creater_asociaciones.union.rowid, '1' ]).then( function(result) {
 			$scope.traerDatos();
 			toastr.success("Se ha creado una Nueva asocación  Exitosamente.");
 		}, function(tx) {

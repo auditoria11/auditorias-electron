@@ -294,7 +294,7 @@ angular.module('auditoriaApp')
 
                 consulta = 'UPDATE respuestas SET modificado=0, eliminado=0';
                 ConexionServ.query(consulta).then(function(result){
-                    console.log(respuestas);
+
                     for (var i = 0; i < respuestas.length; i++) {
 
                         consulta = 'INSERT INTO respuestas (rowid, id, pregunta_id, auditoria_id, respuestas) VALUES(?, ?, ?, ?, ?)'
@@ -312,6 +312,42 @@ angular.module('auditoriaApp')
             
             }, function(tx){
                 console.log('Error eliminando respuestas', tx);
+            });
+
+          
+  
+            return defered.promise;
+        
+        },
+
+
+    recomendaciones: function(recomendas){
+            var defered = $q.defer();
+            
+
+            consulta = 'DELETE FROM recomendaciones WHERE id is null or eliminado="1" ';
+            ConexionServ.query(consulta).then(function(result){
+
+                consulta = 'UPDATE recomendaciones SET modificado=0, eliminado=0';
+                ConexionServ.query(consulta).then(function(result){
+                    console.log(recomendas);
+                    for (var i = 0; i < recomendas.length; i++) {
+
+                        consulta = 'INSERT INTO recomendaciones (rowid, id, recomendacion, justificacion, superada, fecha) VALUES(?, ?, ?, ?, ?, ?)'
+                        ConexionServ.query(consulta, [recomendas[i].id, recomendas[i].id,  recomendas[i].recomendacion, recomendas[i].justificacion, recomendas[i].superada, recomendas[i].fecha  ]).then(function(result){
+                            console.log('se cargo recomendaciones', result);
+                        
+                        }, function(tx){
+                            console.log('error', tx);
+                        });
+                     }
+                
+                }, function(tx){
+                    console.log('Error eliminando recomendaciones', tx);
+                });
+            
+            }, function(tx){
+                console.log('Error eliminando recomendaciones', tx);
             });
 
           
