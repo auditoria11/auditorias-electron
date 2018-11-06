@@ -37,9 +37,21 @@
 				<div class="row">
                 
 					<div class="col-sm-12">
+
+							<h3>Selecciona auditoria</h3>
+							<button ng-click="seleccionarAuditorias(audit)" 
+								ng-repeat="audit in auditorias" 
+								class="btn " ng-class="{'btn-primary': audit.rowid==auditoria.rowid, 'btn-default': audit.rowid!=auditoria.rowid }">
+
+								{{ audit.fecha }}
+							</button>
+							
+							<hr>
 						
 					
 						<table class="table table-bordered table-condensed" style="margin-bottom: 2px;">
+
+
 					
 							<tr>
 								<td class="success"> <label>Distrito: </label></td>

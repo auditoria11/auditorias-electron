@@ -54,11 +54,12 @@ $scope.veractpregunta = function(pregunta){
 	   $scope.vertablapreguntarosmostrar = function(){
 
 	    
-	   ConexionServ.query("SELECT p.* from preguntas p INNER JOIN auditorias a ON p.auditoria = a.rowid  INNER JOIN entidades e ON a.entidad = e.rowid"
+	   ConexionServ.query("SELECT p.* from preguntas p INNER JOIN auditorias a ON p.auditoria_id = a.rowid  e.rowid"
          
 	   	, []).then(function(result){
 
 	          $scope.preguntas = result;
+	          console.log(result);
 
 		   } , function(tx){
 
@@ -69,7 +70,7 @@ $scope.veractpregunta = function(pregunta){
  
 	   	$scope.traerDatos = function() {
 	   		consulta = "SELECT rowid, * from preguntas ";
-
+INNER JOIN entidades e ON a.entidad = 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.preguntas = result;
 			},function(tx) {

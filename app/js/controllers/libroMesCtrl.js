@@ -13,6 +13,7 @@ angular.module("auditoriaApp")
 	$scope.usuarios 			= [];
 	$scope.verCrearLibroMensual = false;
 	$scope.vercomends 			= false;
+	$scope.auditorias 			= [];
 
 	$scope.meses = [
 		{num: 0, mes: 'Enero'},
@@ -279,8 +280,8 @@ angular.module("auditoriaApp")
 			$scope.lib_meses 	= [];
 
 			consulta 	= 'SELECT m.*, m.rowid, s.*, s.rowid as lib_semanal_id FROM lib_mensuales m ' + 
-						'INNER JOIN lib_semanales s ON m.rowid=s.libro_mes_id and m.eliminado is null';
-			ConexionServ.query(consulta, []).then(function(result) {
+						'INNER JOIN lib_semanales s ON m.rowid=s.libro_mes_id and m.eliminado is null and m.auditoria_id =? ';
+			ConexionServ.query(consulta, [$scope.USER.auditoria_rowid]).then(function(result) {
 				$scope.lib_meses = result;
 				
 				angular.forEach($scope.lib_meses, function(lib_mes, indice){
@@ -290,12 +291,15 @@ angular.module("auditoriaApp")
 				
 				
 				consulta 	= 'SELECT a.*, a.rowid FROM auditorias a WHERE rowid=?';
-				ConexionServ.query(consulta, [$scope.USER.iglesia_audit_id]).then(function(result) {
+				ConexionServ.query(consulta, [$scope.USER.auditoria_rowid]).then(function(result) {
 					if (result.length == 0) {
 						toastr.warning('No se encuentra la auditoría seleccionada.');
 						return
 					}
 					$scope.auditoria = result[0];
+
+
+			
 					
 					consulta 	= 'SELECT *, rowid FROM gastos_mes WHERE auditoria_id=?';
 					ConexionServ.query(consulta, [$scope.USER.iglesia_audit_id]).then(function(rGastos) {
@@ -311,6 +315,13 @@ angular.module("auditoriaApp")
 						console.log("Error no se pudo traer datos", tx);
 					});
 					
+					consulta 	= 'SELECT *, rowid FROM auditorias';
+					ConexionServ.query(consulta, []).then(function(rAudi) {
+						$scope.auditorias = rAudi;
+					}, function(tx) {
+						console.log("Error no se pudo traer auditorias", tx);
+					});
+					
 					$scope.actualizar_sumatorias();
 
 				}, function(tx) {
@@ -322,9 +333,14 @@ angular.module("auditoriaApp")
 				console.log("Error no se pudo traer datos", tx);
 			});
 			
+			 
 			
+
 		})
 		
+
+
+
 	}
 	
 	$scope.traerDatos();
@@ -397,6 +413,18 @@ angular.module("auditoriaApp")
 			toastr.error('Saldo NO guardado');
 		});
 
+	}
+
+	$scope.seleccionarAuditorias = function(auditoria) {
+
+
+		ConexionServ.query('UPDATE usuarios SET auditoria_id=? WHERE rowid=? ', [ auditoria.rowid, $scope.USER.rowid ]).then(function(result) {
+			$scope.USER.auditoria_id 		= auditoria.rowid;
+
+			AuthServ.update_user_storage($scope.USER).then(function(usuario){
+				$scope.traerDatos();
+			});
+		});
 	}
 	
 	
