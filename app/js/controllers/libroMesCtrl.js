@@ -70,7 +70,7 @@ angular.module("auditoriaApp")
     	}
 
 
-		$scope.traerrecos();
+		$scope.traerRecos();
 
 		$timeout(function() {
 			$location.hash("nueva_new_new_union");
@@ -131,6 +131,58 @@ angular.module("auditoriaApp")
 					$scope.lib_meses.slice(i, 1, element);
 				}
 			}
+	    }, function(r2){
+	    	$scope.traerDatos();
+	    });
+
+
+	}
+
+
+	
+	$scope.abrirDineroEfectivo = function(auditoria) {
+
+	    var modalInstance = $uibModal.open({
+	        templateUrl: 'templates/libros/EfectivoModal.html',
+	        resolve: {
+		        auditoria: function () {
+		        	return $scope.auditoria;
+		        }
+		    },
+	        controller: 'EfectivoAuditoriaModalCtrl' 
+	    });
+
+	    modalInstance.result.then(function (result) {
+			/*for (let i = 0; i < $scope.auditoria.gastos_detalle.length; i++) {
+				const element = $scope.auditoria.gastos_detalle[i];
+				
+				if (result.rowid == element.rowid) {
+					$scope.auditoria.gastos_detalle.slice(i, 1, element);
+				}
+			}*/
+	    }, function(r2){
+	    	$scope.traerDatos();
+	    });
+
+
+	}
+
+
+
+	$scope.abrirGastosAuditoria = function(auditoria) {
+
+	    var modalInstance = $uibModal.open({
+	        templateUrl: 'templates/libros/gastosAuditoriaModal.html',
+	        resolve: {
+		        auditoria: function () {
+		        	return $scope.auditoria;
+		        }
+		    },
+	        controller: 'GastosAuditoriaModalCtrl' // En LibroMesModales.js 
+	    });
+
+	    modalInstance.result.then(function (result) {
+
 	    }, function(r2){
 	    	$scope.traerDatos();
 	    });
@@ -245,6 +297,20 @@ angular.module("auditoriaApp")
 					}
 					$scope.auditoria = result[0];
 					
+					consulta 	= 'SELECT *, rowid FROM gastos_mes WHERE auditoria_id=?';
+					ConexionServ.query(consulta, [$scope.USER.iglesia_audit_id]).then(function(rGastos) {
+						$scope.auditoria.gastos_detalle = rGastos;
+					}, function(tx) {
+						console.log("Error no se pudo traer datos", tx);
+					});
+					
+					consulta 	= 'SELECT *, rowid FROM dinero_efectivo WHERE auditoria_id=?';
+					ConexionServ.query(consulta, [$scope.USER.iglesia_audit_id]).then(function(rEfectivo) {
+						$scope.auditoria.dinero_detalle = rEfectivo;
+					}, function(tx) {
+						console.log("Error no se pudo traer datos", tx);
+					});
+					
 					$scope.actualizar_sumatorias();
 
 				}, function(tx) {
@@ -275,7 +341,7 @@ angular.module("auditoriaApp")
 	}
 
 
-	$scope.traerrecos = function () {
+	$scope.traerRecos = function () {
 		consulta 	= 'SELECT tr.*, tr.rowid FROM recomendaciones tr WHERE tr.id=?';
 		
 		ConexionServ.query(consulta, [$scope.USER.auditoria_id]).then(function(result) {

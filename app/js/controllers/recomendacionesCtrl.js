@@ -1,5 +1,14 @@
 angular.module('auditoriaApp')
 
+.directive('recomendacionesDir', function() {
+	return {
+	  restrict: 'E',
+	  //scope: {},
+	  controller: 'recomendacionesCtrl',
+	  templateUrl: 'templates/recomendacionesDir.html'
+	};
+})
+
 .controller('recomendacionesCtrl' , function($scope, ConexionServ, $filter, AuthServ, toastr, $location, $anchorScroll, $timeout, $uibModal){
 	
 	
@@ -9,21 +18,13 @@ angular.module('auditoriaApp')
 		superada: 0
 	};
 	
-	$scope.recomendaciones = [];
-
+	$scope.recomendaciones 	= [];
 	
+	$scope.tipos_recomend 	= [
+		{tipo: 'Otra'}
+	];
 	
-	consulta = 'SELECT 	rec.*, rec.rowid from recomendaciones rec WHERE rec.eliminado !="1"'
 
-
-
-		
-		
-	ConexionServ.query(consulta, []).then(function(result){
-		$scope.recomendaciones = result;
-	} , function(tx){
-			console.log('Error no es posbile traer Recomendaciones' , tx)
-	});
 	 
 	
 	$scope.vercrearrecomendacion = function(){
@@ -42,27 +43,28 @@ angular.module('auditoriaApp')
 
 	$scope.verDtosrecomendacion = function(){
 
+		consulta = "SELECT rowid, * from recomendaciones WHERE eliminado !='1'";
 
-		 consulta = "SELECT rowid, * from recomendaciones";
+		ConexionServ.query(consulta, []).then(function(result) {
 
-
-
-			ConexionServ.query(consulta, []).then(function(result) {
-
-				for (var i = result.length - 1; i >= 0; i--) {
-
+			for (var i = result.length - 1; i >= 0; i--) {
+				result[i].fecha = new Date(result[i].fecha);
+				
 				if (result[i].superada == 0) {
 					result[i].superada = "no"
-				}else{result[i].superada = "sí"}
-				
-			}
+				}else{
+					result[i].superada = "sí"
+				}
 			
-				$scope.recomendaciones = result;
-			},function(tx) {
-				console.log("Error no es posbile traer recomendaciones", tx);
-			});
+			}
+			$scope.vermostrarreco 	= false;
+			$scope.recomendaciones 	= result;
+		},function(tx) {
+			console.log("Error no es posbile traer recomendaciones", tx);
+		});
 
 	};
+	$scope.verDtosrecomendacion();
 
 
 
@@ -73,16 +75,14 @@ angular.module('auditoriaApp')
 		 
 	    
 
-	 	consulta ="INSERT INTO recomendaciones(fecha, auditoria_id, justificacion, superada, recomendacion, modificado) VALUES(?,?,?,?,?,?)  "
-		ConexionServ.query(consulta,[reco.fecha, $scope.USER.auditoria_id, reco.justificacion , reco.superada, reco.recomendacion, '0']).then(function(result){
+	 	consulta ="INSERT INTO recomendaciones(fecha, auditoria_id, hallazgo, justificacion, superada, recomendacion, modificado) VALUES(?,?,?,?,?,?,?)  "
+		ConexionServ.query(consulta,[reco.fecha, $scope.USER.auditoria_id, reco.justificacion, reco.justificacion, reco.superada, reco.recomendacion, '0']).then(function(result){
 
-			console.log('recomendacion creada', result);
+			toastr.success('Recomendación creada.');
 			$scope.verDtosrecomendacion();
-			toastr.success('recomendacion creada exitosamente')
-
 
 		} , function(tx){
-			console.log('recomendacion no se pudo crear' , tx)
+			toastr.error('Recomendación no se pudo crear.')
 		});
 	} 
 
@@ -121,25 +121,26 @@ angular.module('auditoriaApp')
 
       };
 
-       $scope.closeActualizarReco = function(){
+    $scope.closeActualizarReco = function(){
       	$scope.VerCreandoReco = false;
-
-      };
+    };
 
 
 
 
 	$scope.actureco = function(reco){
+		
+		superada = reco.superada=='si' ? 1 : 0;
+		
+	 	consulta ="UPDATE recomendaciones SET fecha=?, hallazgo=?, justificacion=?, superada=?, recomendacion=?, modificado=? WHERE rowid=? "
+		ConexionServ.query(consulta,[reco.fecha, reco.hallazgo, reco.justificacion, superada, reco.recomendacion, '1', reco.rowid]).then(function(result){
 
-
-	 	consulta ="UPDATE recomendaciones SET fecha=?, justificacion=?, superada=?, recomendacion=?, modificado=? WHERE rowid=? "
-		ConexionServ.query(consulta,[reco.fecha, reco.justificacion , reco.superada, reco.recomendacion, '1', reco.rowid]).then(function(result){
-
-           console.log('recomendacion  Actualizada', result)
-           alert('recomendacion actualizada correctamente presione F5 para recargar')
+		   toastr.success('Recomendación actualizada.');
+		   $scope.verDtosrecomendacion();
+		   $scope.VerCreandoReco = false;
 
 		} , function(tx){
-			console.log('recomendacion no se pudo actualizar' , tx)
+			toastr.error('Recomendación no se pudo actualizar' , tx)
 		});
 	} 
 
@@ -148,21 +149,17 @@ angular.module('auditoriaApp')
 
 	 $scope.eliminarreco = function(recomendacion){
 	  	
-	 		var res = confirm("¿Seguro que desea eliminar ? ");
+	 	var res = confirm("¿Seguro que desea eliminar ? ");
 
 		if (res == true) {
-			console.log(recomendacion)
-			consulta = 'UPDATE  recomendaciones SET eliminado=? WHERE rowid=? '
-		ConexionServ.query(consulta, ['1', recomendacion.rowid]).then( function(result) {
-			console.log("recomendacion Eliminada", result);
-			toastr.success("recomendacion Eliminada Exitosamente.");
-		},function(tx) {
-			toastr.info("La recomendacion que intenta eliminar no se pudo actualizar.");
-		});
-	} else {
-
-		
-	}
+			consulta = 'UPDATE recomendaciones SET eliminado=? WHERE rowid=? '
+			ConexionServ.query(consulta, ['1', recomendacion.rowid]).then( function(result) {
+				toastr.success("Recomendación eliminada.");
+				$scope.verDtosrecomendacion();
+			},function(tx) {
+				toastr.info("La recomendacion que intenta eliminar no se pudo actualizar.");
+			});
+		}
 
 	 } 
 

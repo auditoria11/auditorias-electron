@@ -32,8 +32,8 @@ angular.module('auditoriaApp')
    		ConexionServ.query(consulta, []).then(function(result) {
 			if (result.length == 0) {
 				
-				consulta = "INSERT INTO usuarios(nombres, apellidos, username, password, tipo, sexo) VALUES(?,?,?,?,?,?) ";
-				ConexionServ.query(consulta, ['Joseth D', 'Guerrero', 'joseth',  '123', 'Admin', 'M']).then(function(result) {
+				consulta = "INSERT INTO usuarios(nombres, apellidos, username, password, tipo, distrito_id, iglesia_id, sexo) VALUES(?,?,?,?,?,?) ";
+				ConexionServ.query(consulta, ['Joseth D', 'Guerrero', 'joseth',  '123', 'Admin', 28, 56, 'M']).then(function(result) {
 		
 				}, function(tx) {
 					console.log("Dato original no insertado", tx);

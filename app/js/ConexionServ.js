@@ -18,7 +18,8 @@ angular.module('auditoriaApp')
                 "division_id integer DEFAULT NULL)"; // Tesorero del distrito
 
    sqlRecomendaciones = "CREATE TABLE IF NOT EXISTS recomendaciones (id integer, " +
-                "recomendacion text  NOT NULL collate nocase, " +
+                "hallazgo text  DEFAULT NULL collate nocase, " +
+                "recomendacion text  DEFAULT NULL collate nocase, " +
                 "justificacion text  DEFAULT NULL collate nocase, " +
                 "superada integer(1) DEFAULT '0', " +
                 "fecha varchar(100)  DEFAULT NULL collate nocase, " +
@@ -189,8 +190,16 @@ angular.module('auditoriaApp')
    
     // Gastos registrados. Tiene que coincidir con los gastos que tienen soporte en soportes_mes
     sqlGastosMes = "CREATE TABLE IF NOT EXISTS gastos_mes (id integer," +
-                "libro_mes_id integer  NOT NULL," + // Si es un gasto de mes
-                "auditoria_id integer  NOT NULL," + // o si es un gasto sin asignar a mes, sino a la auditoría
+                "libro_mes_id integer DEFAULT NULL," + // Si es un gasto de mes
+                "auditoria_id integer DEFAULT NULL," + // o si es un gasto sin asignar a mes, sino a la auditoría
+                "valor integer  NOT NULL," +
+                "descripcion varchar(250)  DEFAULT NULL collate nocase ," +
+                "modificado varchar(100)  DEFAULT NULL collate nocase," +
+                "eliminado integer  DEFAULT '0')";
+
+    // Gastos registrados. Tiene que coincidir con los gastos que tienen soporte en soportes_mes
+    sqlDinero = "CREATE TABLE IF NOT EXISTS dinero_efectivo (id integer," +
+                "auditoria_id integer DEFAULT NULL," + // o si es un gasto sin asignar a mes, sino a la auditoría
                 "valor integer  NOT NULL," +
                 "descripcion varchar(250)  DEFAULT NULL collate nocase ," +
                 "modificado varchar(100)  DEFAULT NULL collate nocase," +
@@ -320,11 +329,19 @@ angular.module('auditoriaApp')
                 */
 
 
-                tx.executeSql( sqlGastosMes , [], function (tx, result) {
+               tx.executeSql( sqlGastosMes , [], function (tx, result) {
                     // console.log('Gastos Mes Tabla creada');
                     defered.resolve('Gastos Mes Tabla creada');
                 }, function(tx,error){
                     console.log("Gastos Mes Tabla No se pudo crear", error.message);
+                })
+
+
+                tx.executeSql( sqlDinero , [], function (tx, result) {
+                    // console.log('Dinero_efectivo Tabla creada');
+                    defered.resolve('Dinero_efectivo Tabla creada');
+                }, function(tx,error){
+                    console.log("Dinero_efectivo Tabla No se pudo crear", error.message);
                 })
 
                 tx.executeSql( sqlpreguntas , [], function (tx, result) {
