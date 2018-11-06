@@ -18,7 +18,8 @@ angular.module('auditoriaApp')
                 "division_id integer DEFAULT NULL)"; // Tesorero del distrito
 
    sqlRecomendaciones = "CREATE TABLE IF NOT EXISTS recomendaciones (id integer, " +
-                "recomendacion text  NOT NULL collate nocase, " +
+                "hallazgo text  DEFAULT NULL collate nocase, " +
+                "recomendacion text  DEFAULT NULL collate nocase, " +
                 "justificacion text  DEFAULT NULL collate nocase, " +
                 "superada integer(1) DEFAULT '0', " +
                 "fecha varchar(100)  DEFAULT NULL collate nocase, " +
@@ -99,6 +100,16 @@ angular.module('auditoriaApp')
                 "fecha varchar(100)  DEFAULT NULL collate nocase," +
                 "hora varchar(100)  DEFAULT NULL collate nocase," +
                 "saldo_ant integer  DEFAULT NULL," +
+                "ingre_por_registrar integer  DEFAULT NULL," +
+                "ingre_sabados integer  DEFAULT NULL," + // Sábados que no se registran en libro mes porque no ha pasado el mes
+                "cta_por_pagar integer  DEFAULT NULL," +
+                "ajuste_por_enviar integer  DEFAULT NULL," +
+                "saldo_banco integer  DEFAULT NULL," + // Respaldos de por qué no está el total del dinero
+                "consig_fondos_confia integer  DEFAULT NULL," + // Consignación en fondos confiados en la asociación
+                "gastos_mes_por_regis integer  DEFAULT NULL," +  // Gastos de mes sin registrar en ningún libro mes
+                "dinero_efectivo integer  DEFAULT NULL," + // Dinero en efectivo
+                "cta_por_cobrar integer  DEFAULT NULL," + // Cuentas por pagar
+                
                 "modificado varchar(100)  DEFAULT NULL collate nocase," +
                 "eliminado varchar(100)  DEFAULT NULL collate nocase," +
                 "iglesia_id integer  NOT NULL )" ;
@@ -179,7 +190,16 @@ angular.module('auditoriaApp')
    
     // Gastos registrados. Tiene que coincidir con los gastos que tienen soporte en soportes_mes
     sqlGastosMes = "CREATE TABLE IF NOT EXISTS gastos_mes (id integer," +
-                "libro_mes_id integer  NOT NULL," +
+                "libro_mes_id integer DEFAULT NULL," + // Si es un gasto de mes
+                "auditoria_id integer DEFAULT NULL," + // o si es un gasto sin asignar a mes, sino a la auditoría
+                "valor integer  NOT NULL," +
+                "descripcion varchar(250)  DEFAULT NULL collate nocase ," +
+                "modificado varchar(100)  DEFAULT NULL collate nocase," +
+                "eliminado integer  DEFAULT '0')";
+
+    // Gastos registrados. Tiene que coincidir con los gastos que tienen soporte en soportes_mes
+    sqlDinero = "CREATE TABLE IF NOT EXISTS dinero_efectivo (id integer," +
+                "auditoria_id integer DEFAULT NULL," + // o si es un gasto sin asignar a mes, sino a la auditoría
                 "valor integer  NOT NULL," +
                 "descripcion varchar(250)  DEFAULT NULL collate nocase ," +
                 "modificado varchar(100)  DEFAULT NULL collate nocase," +
@@ -309,11 +329,19 @@ angular.module('auditoriaApp')
                 */
 
 
-                tx.executeSql( sqlGastosMes , [], function (tx, result) {
+               tx.executeSql( sqlGastosMes , [], function (tx, result) {
                     // console.log('Gastos Mes Tabla creada');
                     defered.resolve('Gastos Mes Tabla creada');
                 }, function(tx,error){
                     console.log("Gastos Mes Tabla No se pudo crear", error.message);
+                })
+
+
+                tx.executeSql( sqlDinero , [], function (tx, result) {
+                    // console.log('Dinero_efectivo Tabla creada');
+                    defered.resolve('Dinero_efectivo Tabla creada');
+                }, function(tx,error){
+                    console.log("Dinero_efectivo Tabla No se pudo crear", error.message);
                 })
 
                 tx.executeSql( sqlpreguntas , [], function (tx, result) {

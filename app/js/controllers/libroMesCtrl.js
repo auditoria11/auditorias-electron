@@ -7,13 +7,13 @@ angular.module("auditoriaApp")
 	$scope.widget_maximized 		= false;
 	$scope.widget_maximized_totales = false;
 	
-    $scope.distrito_new 	= {};
-	$scope.modentidades 	= false;
-	$scope.verCrearDistrito = false;
-	$scope.usuarios 		= [];
+    $scope.distrito_new 		= {};
+	$scope.modentidades 		= false;
+	$scope.verCrearDistrito 	= false;
+	$scope.usuarios 			= [];
 	$scope.verCrearLibroMensual = false;
-	$scope.vercomends = false;
-	
+	$scope.vercomends 			= false;
+
 	$scope.meses = [
 		{num: 0, mes: 'Enero'},
 		{num: 1, mes: 'Febrero'},
@@ -70,7 +70,7 @@ angular.module("auditoriaApp")
     	}
 
 
-		$scope.traerrecos();
+		$scope.traerRecos();
 
 		$timeout(function() {
 			$location.hash("nueva_new_new_union");
@@ -92,7 +92,7 @@ angular.module("auditoriaApp")
 	    });
 
 	    modalInstance.result.then(function (result) {
-			console.log(result);
+
 			for (let i = 0; i < $scope.lib_meses.length; i++) {
 				const element = $scope.lib_meses[i];
 				
@@ -100,6 +100,7 @@ angular.module("auditoriaApp")
 					$scope.lib_meses.slice(i, 1, element);
 				}
 			}
+			$scope.actualizar_sumatorias();
 	    }, function(r2){
 	    	$scope.traerDatos();
 	    });
@@ -138,6 +139,58 @@ angular.module("auditoriaApp")
 	}
 
 
+	
+	$scope.abrirDineroEfectivo = function(auditoria) {
+
+	    var modalInstance = $uibModal.open({
+	        templateUrl: 'templates/libros/EfectivoModal.html',
+	        resolve: {
+		        auditoria: function () {
+		        	return $scope.auditoria;
+		        }
+		    },
+	        controller: 'EfectivoAuditoriaModalCtrl' 
+	    });
+
+	    modalInstance.result.then(function (result) {
+			/*for (let i = 0; i < $scope.auditoria.gastos_detalle.length; i++) {
+				const element = $scope.auditoria.gastos_detalle[i];
+				
+				if (result.rowid == element.rowid) {
+					$scope.auditoria.gastos_detalle.slice(i, 1, element);
+				}
+			}*/
+	    }, function(r2){
+	    	$scope.traerDatos();
+	    });
+
+
+	}
+
+
+
+	$scope.abrirGastosAuditoria = function(auditoria) {
+
+	    var modalInstance = $uibModal.open({
+	        templateUrl: 'templates/libros/gastosAuditoriaModal.html',
+	        resolve: {
+		        auditoria: function () {
+		        	return $scope.auditoria;
+		        }
+		    },
+	        controller: 'GastosAuditoriaModalCtrl' // En LibroMesModales.js 
+	    });
+
+	    modalInstance.result.then(function (result) {
+
+	    }, function(r2){
+	    	$scope.traerDatos();
+	    });
+
+
+	}
+
+
 
 	$scope.cambiaValor = function(libro, columna) {
 
@@ -146,6 +199,7 @@ angular.module("auditoriaApp")
 		
 		ConexionServ.query(consulta, [libro[columna], libro.rowid]).then(function(){
 			toastr.success(colum + ' guardado');
+			$scope.actualizar_sumatorias();
 		}, function(){
 			toastr.error(colum + ' NO guardado');
 		});
@@ -155,6 +209,12 @@ angular.module("auditoriaApp")
 
 
 	$scope.crear_libronuevo = function(libro_new) {
+		
+		if (!$scope.USER.auditoria_id) {
+			toastr.warning('No tiene auditoría seleccionada.');
+			return;
+		}
+		
 		$scope.creando_libro = true;
 		
   		if (libro_new.mes.length > 1) {
@@ -182,8 +242,6 @@ angular.module("auditoriaApp")
 		consulta 	= 'INSERT INTO lib_mensuales(year, mes, auditoria_id, diezmos, ofrendas, especiales, remesa_enviada, modificado) VALUES(?,?,?,?,?,?,?,?)';
 		
 		datos = [year_temp, mes_temp, $scope.USER.auditoria_id,0,0,0,0,'1'];
-
-		console.log(consulta, datos);
 
 		ConexionServ.query(consulta, datos).then(function(result) {
 
@@ -217,24 +275,54 @@ angular.module("auditoriaApp")
 
 	$scope.traerDatos = function(){
 		AuthServ.update_user_storage($scope.USER).then((actualizado)=>{
-			console.log(actualizado);
 			$scope.USER 		= actualizado;
 			$scope.lib_meses 	= [];
 
 			consulta 	= 'SELECT m.*, m.rowid, s.*, s.rowid as lib_semanal_id FROM lib_mensuales m ' + 
 						'INNER JOIN lib_semanales s ON m.rowid=s.libro_mes_id and m.eliminado is null';
-			
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.lib_meses = result;
 				
 				angular.forEach($scope.lib_meses, function(lib_mes, indice){
 					$scope.gastosLibMes(lib_mes);
 				})
+				
+				
+				
+				consulta 	= 'SELECT a.*, a.rowid FROM auditorias a WHERE rowid=?';
+				ConexionServ.query(consulta, [$scope.USER.iglesia_audit_id]).then(function(result) {
+					if (result.length == 0) {
+						toastr.warning('No se encuentra la auditoría seleccionada.');
+						return
+					}
+					$scope.auditoria = result[0];
+					
+					consulta 	= 'SELECT *, rowid FROM gastos_mes WHERE auditoria_id=?';
+					ConexionServ.query(consulta, [$scope.USER.iglesia_audit_id]).then(function(rGastos) {
+						$scope.auditoria.gastos_detalle = rGastos;
+					}, function(tx) {
+						console.log("Error no se pudo traer datos", tx);
+					});
+					
+					consulta 	= 'SELECT *, rowid FROM dinero_efectivo WHERE auditoria_id=?';
+					ConexionServ.query(consulta, [$scope.USER.iglesia_audit_id]).then(function(rEfectivo) {
+						$scope.auditoria.dinero_detalle = rEfectivo;
+					}, function(tx) {
+						console.log("Error no se pudo traer datos", tx);
+					});
+					
+					$scope.actualizar_sumatorias();
+
+				}, function(tx) {
+					console.log("Error no se pudo traer datos", tx);
+				});
+
 
 			}, function(tx) {
 				console.log("Error no se pudo traer datos", tx);
 			});
-
+			
+			
 		})
 		
 	}
@@ -253,7 +341,7 @@ angular.module("auditoriaApp")
 	}
 
 
-	$scope.traerrecos = function () {
+	$scope.traerRecos = function () {
 		consulta 	= 'SELECT tr.*, tr.rowid FROM recomendaciones tr WHERE tr.id=?';
 		
 		ConexionServ.query(consulta, [$scope.USER.auditoria_id]).then(function(result) {
@@ -298,11 +386,12 @@ angular.module("auditoriaApp")
 	}
 	 
 
-	$scope.cambiaSaldoAnterior = function(usu) {
+	$scope.cambiaAuditoria = function(columna) {
 
-		consulta 	= 'UPDATE auditorias SET saldo_ant=?, modificado=1 WHERE rowid=?';
-        
-		ConexionServ.query(consulta, [usu.saldo_ant, usu.iglesia_audit_id]).then(function(){
+		consulta 	= 'UPDATE auditorias SET ' + columna + '=?, modificado=1 WHERE rowid=?';
+		colum 		= columna.charAt(0).toUpperCase() + columna.slice(1);
+		
+		ConexionServ.query(consulta, [$scope.auditoria[columna], $scope.auditoria.rowid]).then(function(){
 			toastr.success('Saldo guardado');
 		}, function(){
 			toastr.error('Saldo NO guardado');
@@ -310,20 +399,68 @@ angular.module("auditoriaApp")
 
 	}
 	
-	$scope.total_ingresos_periodo = ()=>{
+	
+	$scope.actualizar_sumatorias = function(){
+		aud 				= $scope.auditoria;
 		
-		if ($scope.lib_meses) {
-			suma = 0;
-			for (let i = 0; i < $scope.lib_meses.length; i++) {
-				const mes = $scope.lib_meses[i];
-				suma = suma + (mes.especiales + mes.ofrendas * 0.6);
-			}
-			$scope.total_disponible_periodo = $filter('currency')((suma + $scope.USER.saldo_ant), '$', 0);
-			return $filter('currency')(suma, '$', 0);
-		}else{
-			$scope.total_disponible_periodo = 0;
-			return 0;
+		sum_diezmos 		= 0;
+		sum_ofrendas 		= 0;
+		sum_especiales 		= 0;
+		sum_diaconos 		= 0;
+		sum_diferencia 		= 0;
+		sum_gastos 			= 0;
+		sum_gastos_sop 		= 0;
+		sum_remesa_env 		= 0;
+		
+		for (let i = 0; i < $scope.lib_meses.length; i++) {
+			lib_mes 			= $scope.lib_meses[i];
+			
+			sum_diezmos 		+= lib_mes.diezmos;
+			sum_ofrendas 		+= lib_mes.ofrendas;
+			sum_especiales 		+= lib_mes.especiales;
+			sum_diaconos 		+= lib_mes.diaconos_1 + lib_mes.diaconos_2 + lib_mes.diaconos_3 + lib_mes.diaconos_4 + lib_mes.diaconos_5;
+			sum_gastos 			+= lib_mes.gastos;
+			sum_gastos_sop 		+= lib_mes.gastos_soportados;
+			sum_remesa_env 		+= lib_mes.remesa_enviada;
 		}
+
+		$scope.sum_diezmos 			= $filter('currency')(sum_diezmos, '$', 0);
+		$scope.sum_ofrendas 		= $filter('currency')(sum_ofrendas, '$', 0);
+		$scope.sum_especiales 		= $filter('currency')(sum_especiales, '$', 0);
+		
+		sum_totales 				= sum_diezmos + sum_ofrendas + sum_especiales;
+		$scope.sum_totales 			= $filter('currency')(sum_totales, '$', 0);
+		
+		sum_diferencia 				= sum_totales - sum_diaconos;
+		$scope.sum_diferencia 		= $filter('currency')(sum_diferencia, '$', 0);
+		
+		$scope.sum_diaconos 		= $filter('currency')(sum_diaconos, '$', 0);
+		
+		$scope.sum_20_ofrendas 		= $filter('currency')( sum_ofrendas * 0.2, '$', 0);
+		$scope.sum_20_ofrendas 		= $filter('currency')( sum_ofrendas * 0.2, '$', 0);
+		sum_ofre_esp 				= sum_ofrendas + sum_especiales;
+		$scope.sum_60_ofrendas 		= $filter('currency')( sum_ofre_esp * 0.6, '$', 0);
+		$scope.sum_gastos 			= $filter('currency')( sum_gastos, '$', 0);
+		$scope.sum_gastos_sop 		= $filter('currency')( sum_gastos_sop, '$', 0);
+		$scope.sum_dif_gastos 		= $filter('currency')( (sum_gastos - sum_gastos_sop), '$', 0);
+		$scope.sum_remesa 			= $filter('currency')( (sum_diezmos + sum_ofrendas*0.4), '$', 0);
+		$scope.sum_remesa_env 		= $filter('currency')( sum_remesa_env, '$', 0);
+		$scope.sum_dif_remesa 		= $filter('currency')( (sum_remesa_env-$scope.sum_remesa), '$', 0);
+		$scope.sum_disponi_perio	= $filter('currency')( (sum_ofre_esp + aud.saldo_ant), '$', 0);
+		
+		sum_total_fondos 			= sum_ofre_esp + aud.saldo_ant - sum_gastos;
+		$scope.sum_total_fondos 	= $filter('currency')(sum_total_fondos, '$', 0);
+		sum_locales_igl 			= sum_total_fondos + aud.ingre_por_registrar;
+		$scope.sum_locales_igl 		= $filter('currency')(sum_locales_igl, '$', 0);
+		
+		total_fondos 				= sum_locales_igl + aud.ingre_sabados + aud.cta_por_pagar + aud.ajuste_por_enviar; 
+		$scope.total_fondos 		= $filter('currency')(total_fondos, '$', 0);
+		
+		total_respaldado 			= aud.saldo_banco + aud.consig_fondos_confia + aud.gastos_mes_por_regis + aud.dinero_efectivo + aud.cta_por_cobrar; 
+		$scope.total_respaldado 	= $filter('currency')(total_respaldado, '$', 0);
+		
+		total_dif 					= total_respaldado - total_fondos;
+		$scope.total_dif 			= $filter('currency')(total_dif, '$', 0);
 		
 	}
 	

@@ -30,7 +30,7 @@ angular.module('auditoriaApp')
 		}
 		
 		if (auditoria.fecha) {
-			auditoria.fecha = new Date(auditoria.fecha);
+			auditoria.fecha_new = new Date(auditoria.fecha);
 		}
 		
 		for (let i = 0; i < $scope.iglesias.length; i++) {
@@ -85,18 +85,16 @@ angular.module('auditoriaApp')
 
 	$scope.actusersauditoria = function(auditoria_cambiar){
 
+		console.log(auditoria_cambiar);
 
-	 	auditoria_cambiar.fecha = new Date();
-		auditoria_cambiar.fecha = ' ' + auditoria_cambiar.fecha.getFullYear() + ' / ' + auditoria_cambiar.fecha.getMonth() + ' / ' + auditoria_cambiar.fecha.getDate() ;
+		fecha = '' + auditoria_cambiar.fecha_new.getFullYear() + '-' + auditoria_cambiar.fecha_new.getMonth() + '-' + auditoria_cambiar.fecha_new.getDate();
 
-		auditoria_cambiar.hora = new Date();
-		auditoria_cambiar.hora = ' ' + auditoria_cambiar.hora.getHours() + ' : ' + auditoria_cambiar.hora.getMinutes() + ' : ' + auditoria_cambiar.hora.getSeconds() ;
-	  	
-	 	consulta ="UPDATE auditorias SET fecha=?, hora=?, entidad=?, saldo_ant=? WHERE rowid=? "
-		ConexionServ.query(consulta,[auditoria_cambiar.fecha, auditoria_cambiar.hora, auditoria_cambiar.entidad, auditoria_cambiar.saldo_ant, auditoria_cambiar.rowid]).then(function(result){
+		hora = '' + auditoria_cambiar.hora_new.getHours() + ':' + auditoria_cambiar.hora_new.getMinutes();
 
-           console.log('auditoria  Actualizado', result)
-           alert('auditoria actualizado correctamente presione F5 para recargar')
+	 	consulta ="UPDATE auditorias SET fecha=?, hora=?, iglesia_id=?, saldo_ant=? WHERE rowid=? "
+		ConexionServ.query(consulta,[fecha, hora, auditoria_cambiar.iglesia.rowid, auditoria_cambiar.saldo_ant, auditoria_cambiar.rowid]).then(function(result){
+
+           toastr.success('Actualizado correctamente. Presione F5 para recargar');
 
 		} , function(tx){
 			console.log('auditoria no se pudo actualizar' , tx)
