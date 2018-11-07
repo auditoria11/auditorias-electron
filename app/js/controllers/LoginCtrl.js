@@ -16,7 +16,7 @@ angular.module('auditoriaApp')
         AuthServ.loguear(user).then(function(){
             $state.go('panel')
         }, function(){
-            alert('Datos incorrectos');
+            toastr.error('Datos incorrectos');
         })
     
         
@@ -63,31 +63,8 @@ angular.module('auditoriaApp')
 					console.log("Dato original no insertado", tx);
 				});
 				
-				ConexionServ.query(consulta, ['Gustavo', 'Pérez', 'gustavo',  '123', 'Auditor', 'M']).then(function(result) {
-		
-				}, function(tx) {
-					console.log("Dato original no insertado", tx);
-				});
-					
-				ConexionServ.query(consulta, ['Daniel', 'Grandas', 'daniel',  '123', 'Pastor', 'M']).then(function(result) {
-		
-				}, function(tx) {
-					console.log("Dato original no insertado", tx);
-				});
-					
-				ConexionServ.query(consulta, ['Edilson', 'Marquez', 'edilson',  '123', 'Tesorero', 'M']).then(function(result) {
-		
-				}, function(tx) {
-					console.log("Dato original no insertado", tx);
-				});
-					
-				ConexionServ.query(consulta, ['Felix', 'Díaz', 'felix',  '123', 'Pastor', 'M']).then(function(result) {
-		
-				}, function(tx) {
-					console.log("Dato original no insertado", tx);
-				});
-				
-				
+			
+				/*
 				
 				// Distritos
 				
@@ -1779,7 +1756,7 @@ angular.module('auditoriaApp')
 					console.log("Dato original no insertado", tx);
 				});
 
-					
+					*/
 				
 				
 			}

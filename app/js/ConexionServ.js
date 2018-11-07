@@ -220,7 +220,6 @@ angular.module('auditoriaApp')
 
     sqlrespuestas = "CREATE TABLE IF NOT EXISTS respuestas (id integer," +
                 "pregunta_id varchar(100)  NOT NULL collate nocase," +
-                "auditoria_id varchar(100)  DEFAULT NULL collate nocase," +
                 "respuestas varchar(100)  NOT NULL, " +
                 "modificado varchar(100)  DEFAULT NULL collate nocase," +
                 "eliminado integer  DEFAULT '0')";       

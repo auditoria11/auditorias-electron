@@ -1,6 +1,6 @@
 angular.module('auditoriaApp')
 
-.controller('respuestasctrl' , function($scope, ConexionServ, $filter){
+.controller('respuestasctrl' , function($scope, ConexionServ, $filter, toastr){
 
 
 	$scope.vercreandorespuestas = function() {
@@ -19,11 +19,11 @@ angular.module('auditoriaApp')
 
 	  	
 
-	 	consulta ="INSERT INTO respuestas(pregunta_id, auditoria_id, respuestas, modificado ) VALUES(?, ?, ?, ?) "
-	   ConexionServ.query(consulta, [respuestas_crear.pregunta_id, respuestas_crear.auditoria_id, respuestas_crear.respuestas, '1']).then(function(result){
+	 	consulta ="INSERT INTO respuestas(pregunta_id, respuestas ) VALUES(?, ?) "
+	   ConexionServ.query(consulta, [respuestas_crear.pregunta_id, respuestas_crear.respuestas]).then(function(result){
 
            console.log('respuesta creada', result)
-           alert('respuesta creado exitosamente, presiona F5 Para recargar')
+           toastr.success('respuesta creado exitosamente, presiona F5 Para recargar')
 
 	   } , function(tx){
 
@@ -33,65 +33,72 @@ angular.module('auditoriaApp')
 
 	 } 
 
-	  $scope.vermostrandotablarespuestas = function(){
+	$scope.vermostrandotablarespuestas = function(){
 
-	   consulta = "SELECT  re.*, re.rowid, p.definition, p.tipo ,  a.fecha, a.hora" + 
+		consulta = "SELECT  re.*, re.rowid, p.definition, p.tipo ,  a.fecha, a.hora " + 
 	   				"from respuestas re " + 
 	   				"INNER JOIN preguntas p ON re.pregunta_id = p.rowid " + 
-	   				"INNER JOIN auditorias a ON re.auditoria_id = a.rowid  ";
+	   				"INNER JOIN auditorias a ON a.rowid = p.auditoria_id  ";
 	   
-	   ConexionServ.query(consulta, []).then(function(result){
+		ConexionServ.query(consulta, []).then(function(result){
 	   		console.log(result);
-	          $scope.respuestas = result;
-	          console.log( $scope.respuestas)
+	        $scope.respuestas = result;
+	        console.log( $scope.respuestas)
 
-		   } , function(tx){
+		} , function(tx){
 
 		   	console.log('Error no es posbile traer Respuestas' , tx)
 
-		   })
+		})
 
 	    ConexionServ.query('SELECT *, rowid  from preguntas', []).then(function(result){
 
 	          $scope.preguntas = result;
 
-		   } , function(tx){
+		} , function(tx){
 
 		   	console.log('Error no es posbile traer preguntas' , tx)
 
-		   })
+		})
 
 
-	     ConexionServ.query('SELECT  a.*, a.rowid, e.nombres, e.alias  from auditorias a INNER JOIN entidades e ON a.entidad = e.rowid  ', []).then(function(result){
- 				console.log(result);
-	          $scope.auditorias = result;
+	    ConexionServ.query('SELECT  a.*, a.rowid, e.nombre, e.alias  from auditorias a INNER JOIN iglesias e ON a.iglesia_id=e.rowid  ', []).then(function(result){
+ 			console.log(result);
+	        $scope.auditorias = result;
 
-	          
 
-			   for (var i = 0; i < $scope.auditorias.length; i++) {
-			   		fecha = new Date($scope.auditorias[i].fecha);
-			   		console.log(fecha);
-				  	$scope.auditorias[i].fecha = fecha.getFullYear() +  ' / '  + fecha.getMonth() +  ' / '  + fecha.getDate();
+		   	for (var i = 0; i < $scope.auditorias.length; i++) {
+		   		fecha = new Date($scope.auditorias[i].fecha);
+			  	$scope.auditorias[i].fecha = fecha.getFullYear() +  '/'  + fecha.getMonth() +  '/'  + fecha.getDate();
+			}
 
-				   
-				  	
-				  }
-
-		   } , function(tx){
+		} , function(tx){
 
 		   	console.log('Error no es posbile traer auditorias' , tx)
 
-		   })
+		})
 
-	      ConexionServ.query('SELECT *, rowid  from entidades', []).then(function(result){
+		ConexionServ.query('SELECT *, rowid  from iglesias', []).then(function(result){
 
 	          $scope.entidades = result;
 
-		   } , function(tx){
+		} , function(tx){
 
 		   	console.log('Error no es posbile traer entidades' , tx)
 
-		   });
+		});
+
+		ConexionServ.query('SELECT  p.*, p.rowid from preguntas p  ', []).then(function(result){
+ 			console.log(result);
+	        $scope.preguntas = result;
+
+		} , function(tx){
+
+		   	console.log('Error no es posbile traer preguntas' , tx)
+
+		})
+
+
 
 	 } 
 
@@ -104,18 +111,20 @@ angular.module('auditoriaApp')
 
 		
 		
-		$scope.respuesta_actua = respuesta;
+		$scope.respuestaActua = respuesta;
 	}
 
 
 
-  $scope.acrepuasd = function(respuesta_cambiar){
+  $scope.actu_res = function(respuesta_cambiar){
+
+  	console.log(respuesta_cambiar)
 	  	
-	 consulta ="UPDATE  respuestas SET pregunta_id=?, auditoria_id=?, respuestas=?, modificado=? WHERE rowid=? "
-	   ConexionServ.query(consulta,[respuesta_cambiar.pregunta_id, respuesta_cambiar.auditoria_id, respuesta_cambiar.respuestas, respuesta_cambiar.rowid, '1' ]).then(function(result){
+	 consulta ="UPDATE respuestas SET pregunta_id=?, respuestas=?, modificado=? WHERE rowid=? "
+	   ConexionServ.query(consulta,[respuesta_cambiar.pregunta_id, respuesta_cambiar.respuestas, '1' ,  respuesta_cambiar.rowid]).then(function(result){
 
            console.log('respuesta Actualizado', result)
-           alert('respuesta actualizado correctamente presione F5 para recargar')
+           toastr.success('respuesta actualizado correctamente presione F5 para recargar')
 
 	   } , function(tx){
 
@@ -131,7 +140,7 @@ angular.module('auditoriaApp')
 
 		if (res == true) {
 			consulta = "UPDATE  respuestas SET eliminado=? WHERE rowid=? ";
-		ConexionServ.query(consulta, ['1', union.rowid]).then( function(result) {
+		ConexionServ.query(consulta, ['1', respuesta.rowid]).then( function(result) {
 			console.log("respuestas Eliminada", result);
 			toastr.success("respuestas Eliminada Exitosamente.");
 		},function(tx) {
@@ -141,7 +150,6 @@ angular.module('auditoriaApp')
 	 } 
 
 
-	
 
 
 });

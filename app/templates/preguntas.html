@@ -33,20 +33,67 @@
     </div>
 </div>
 
+
+
 <button  class="btn btn-primary" ng-click="vercrearpregunta()">Crear</button>
 
 
     <div ng-show="vercreando" class="panel panel-warning">
-      <div class="panel-heading">Ingrese  los datos de las Preguntas en los campos correspodientes</div>
+
          <form ng-submit="Insertpreguntas(pregunta_crearasd)">
 
+
+          <div class="col-sm-12">
+                    <form ng-submit="inserter_union(creatar_union)">
+                      <div class="row">
+                        <div class="form-group col-sm-12">
+                          <label for="nombre_union_new">Definición</label>
+                           <input required="required" type="text" class="form-control" placeholder="Definición" ng-model="pregunta_crearasd.definition">
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                          <label for="nombre_union_new">Tipo</label>
+                            <input required="required" type="text" class="form-control" placeholder="tipo" ng-model="pregunta_crearasd.tipo">
+            
+                        </div>
+
+                      </div>
+          
+                      <div class="row">
+                        <div class="form-group col-sm-6">
+                          <label for="alias_union_new">Alias</label>
+          
+                          <input required="required" class="form-control" id="alias_union_new" type="text" placeholder="Alias" ng-model="creatar_union.alias">
+                        </div>
+          
+          
+          
+                        <div class="form-group col-sm-6">
+                          <label for="codigo_union_new">Codigo</label>
+                          <input required="required" class="form-control" id="codigo_union_new" type="text" placeholder="Codigo" ng-model="creatar_union.codigo">
+          
+                        </div>
+          
+                      </div>
+          
+          
+          
+          
+                      <div class="center">
+                        <input class="btn btn-warning " type="button" ng-click="CancelarCrearUnion()" value="Cancelar">
+                        <input class="btn btn-primary " type="submit" value="Guardar Union">
+                      </div>
+          
+                    </form>
+                  </div>
+
+
           <div>
-            <input required="required" type="text" class="form-control" placeholder="Definición" ng-model="pregunta_crearasd.definition">
+           
           </div>
 
           <div>
-            <input required="required" type="text" class="form-control" placeholder="tipo" ng-model="pregunta_crearasd.tipo">
-            
+           
           </div>
 
           <div>
@@ -101,10 +148,10 @@
       <th scope="col">ID </th>
       <th scope="col">Definición</th>
       <th scope="col">tipo</th>
-      <th scope="col">Opción 1</th>
-      <th scope="col">Opción 2</th>
-      <th scope="col">Opción 3</th>
-      <th scope="col">Opción 4</th>
+      <th scope="col">Opción 1 </th>
+      <th scope="col">Opción 2 </th>
+      <th scope="col">Opción 3 </th>
+      <th scope="col">Opción 4 </th>
       <th scope="col">Auditoria</th>
      
     
@@ -119,7 +166,7 @@
     
     <tr ng-repeat="pregunta in preguntas">
       
-      <td>{{pregunta.rowid}}</td>
+      <td>{{$index + 1}}</td>
       <td>{{pregunta.definition}}</td>
       <td>{{pregunta.tipo}}</td>
       <td>{{pregunta.option1}}</td>
@@ -130,7 +177,7 @@
     
      
       <td scope="col" class=" glyphicon glyphicon-pencil btn btn-primary" href="" ng-click="veractpregunta(pregunta)"></td>
-      <td scope="col" class="glyphicon glyphicon-remove btn btn-danger" href="" ng-click="elimninpreguntas(pregunta)" ></td>
+      <td scope="col" class="glyphicon glyphicon-remove btn btn-danger" href="" ng-click="Eliminarpreg(pregunta)" ></td>
     </tr>
 
 
@@ -185,7 +232,13 @@
 
         <tr>
           <td>Auditoria :</td>
-          <td> <select class="form-control" ng-model="pregunta_crearasd.auditoria"><optgroup label="Auditoria:"><option ng-repeat="auditoria in auditorias" value="{{auditoria.rowid}}"> {{auditoria.fecha}} {{auditoria.hora}} {{auditoria.entidad}}</option></optgroup></select></td>
+          <td> 
+            <select class="form-control" ng-model="pregunta_editar.auditoria_id">
+              <optgroup label="Auditoria:">
+                <option ng-repeat="auditoria in auditorias" value="{{auditoria.rowid}}"> {{auditoria.fecha}} {{auditoria.hora}} {{auditoria.entidad}}</option>
+              </optgroup>
+            </select>
+          </td>
         </tr>
             
 
@@ -195,7 +248,7 @@
      
 
      <div>
-       <input class="btn btn-primary  btn-block" type="submit" name="" value="Actualizar Pregunta">
+       <input class="btn btn-primary  btn-block" type="submit" ng-click="Actualizarpreguntas(pregunta_editar)" name="" value="Actualizar Pregunta">
      </div>
      
 

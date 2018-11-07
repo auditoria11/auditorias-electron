@@ -37,7 +37,7 @@
 <button  class="btn btn-primary" ng-click="vercreandorespuestas()">Crear</button>
 
     <div ng-show="vercradasdrepsuestas" class="panel panel-warning">
-      <div class="panel-heading">Ingrese  los datos de Las respuestas en los campos correspodientes</div>
+      <div class="panel-heading">Ingrese los datos de Las respuestas en los campos correspodientes</div>
 
          <form ng-submit="insertandorespuesats(respuesta_insertar)">
 
@@ -51,13 +51,6 @@
           </select>
           </div>
 
-          <div>
-             <select required="required" class="form-control selcls" ng-model="respuesta_insertar.auditoria_id"> <optgroup label="Auditoria ID:"> <option ng-repeat="auditoria in auditorias" value="{{auditoria.rowid}}" >{{auditoria.fecha}}  {{auditoria.hora}}   {{auditoria.nombres}} {{auditoria.alias}} </option></optgroup>
-
-
-            
-          </select>
-          </div>
 
 
         
@@ -119,13 +112,13 @@
 
 <div ng-show="mostrarrespuesta">
     <h2>Modificar usuario</h2>
-    <form ng-submit="acrepuasd(respuesta_actua)">
+    <form ng-submit="actu_res(respuesta_Actua)">
 
       <table style="width: 100%;">
 
         <tr>
           <td>Pregunta ID:</td>
-          <td><select   class="form-control selcls" ng-model="respuesta_actua.pregunta_id">  
+          <td><select   class="form-control selcls" ng-model="respuestaActua.pregunta_id">  
               <optgroup label="Preguntas ID:"> 
                 <option ng-repeat="pregunta in preguntas" value="{{pregunta.rowid}}">{{pregunta.definition}} {{pregunta.tipo}} 
                 </option>
@@ -135,20 +128,10 @@
         </tr>
 
 
-        <tr>
-          <td>Auditoria ID:</td>
-          <td><select required="required" class="form-control selcls" ng-model="respuesta_actua.auditoria_id"> <optgroup label="Auditoria ID:"> <option ng-repeat="auditoria in auditorias" value="{{auditoria.rowid}}" >{{auditoria.fecha}}  {{auditoria.hora}}   {{auditoria.nombres}} {{auditoria.alias}} </option></optgroup>
-
-
-            
-          </select>
-            </td>
-        </tr>
-
 
         <tr>
-          <td>Respuestas :</td>
-          <td>  <input class="form-control" type="text" placeholder="respuestas" ng-model="respuesta_actua.respuestas">
+          <td>Respuesta:</td>
+          <td>  <input class="form-control" type="text" placeholder="respuestas" ng-model="respuestaActua.respuestas">
           </td>
         </tr>
         

@@ -173,7 +173,8 @@ angular.module("auditoriaApp")
 					"i.tipo_propiedad3, i.anombre_propiedad3, i.fecha_propiedad3, i.fecha_fin3 " + 
 				"FROM iglesias i " +
 				"LEFT JOIN distritos d ON d.rowid=i.distrito_id " +
-				"LEFT JOIN usuarios t ON t.tipo='Tesorero' and t.rowid=i.tesorero_id ";
+				"LEFT JOIN usuarios t ON t.tipo='Tesorero' and t.rowid=i.tesorero_id " + 
+				"where i.eliminado is null or i.eliminado=='0'";
 
 			ConexionServ.query($scope.consulta_igle, []).then(function(result) {
 				$scope.iglesias = result;
@@ -223,7 +224,7 @@ angular.module("auditoriaApp")
 			consulta = "INSERT INTO entidades(nombres, alias, pastor, celular) VALUES(?, ?, ?, ?) ";
 			ConexionServ.query(consulta, [entidad_crear.nombres,entidad_crear.alias,entidad_crear.pastor,entidad_crear.celular]).then(function(result) {
 				console.log("entidad creada", result);
-				alert("Entidad creada exitosamente");
+				toastr.success("Entidad creada exitosamente");
 			}, function(tx) {
 				console.log("entidad no se pudo crear", tx);
 			});
