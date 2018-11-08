@@ -278,7 +278,7 @@ angular.module("auditoriaApp")
 			// Traemos IGLESIAS
 			$scope.consulta_igle =
 				"SELECT i.rowid, i.* FROM iglesias i " +
-				"where i.modificado= '1'  or eliminado=1 ";
+				"where i.modificado= '1'  or eliminado=1  or i.id is null ";
 
 
 				
@@ -343,7 +343,7 @@ angular.module("auditoriaApp")
 				console.log("Error no es posbile traer preguntas", tx);
 			});
 
-			consulta = "SELECT rowid, * from respuestas res where res.modificado=1 or res.eliminado=1";
+			consulta = "SELECT rowid, * from respuestas res where res.modificado=1 or res.eliminado=1 or res.id is null ";
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.respuestas = result;
@@ -351,7 +351,7 @@ angular.module("auditoriaApp")
 				console.log("Error no es posbile traer respuestas", tx);
 			});
 
-			consulta = "SELECT rowid, * from recomendaciones rec where id is null or rec.modificado=1 or rec.eliminado=1";
+			consulta = "SELECT rowid, * from recomendaciones rec where id is null or rec.modificado=1 or rec.eliminado=1 or rec.id is null ";
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.recomendaciones = result;
