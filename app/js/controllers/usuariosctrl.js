@@ -282,10 +282,10 @@ angular.module("auditoriaApp")
 	$scope.ok = ()=>{
 
 		
-		consulta = "DELETE FROM usuarios WHERE rowid=? ";
+		consulta = "UPDATE usuarios SET eliminado=1 WHERE rowid=? ";
 
 		ConexionServ.query(consulta, [elemento.rowid]).then(function(result) {
-			console.log("Usuario eliminada", elemento);
+			console.log("Usuario eliminado", elemento);
 			$modalInstance.close(elemento)
 		}, function(tx) {
 			console.log("usuario no se pudo Eliminar", tx);
