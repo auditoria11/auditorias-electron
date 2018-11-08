@@ -240,9 +240,9 @@ angular.module("auditoriaApp")
   		mes_temp 	= libro_new.mes[0];
 
 
-		consulta 	= 'INSERT INTO lib_mensuales(year, mes, auditoria_id, diezmos, ofrendas, especiales, remesa_enviada, modificado) VALUES(?,?,?,?,?,?,?,?)';
+		consulta 	= 'INSERT INTO lib_mensuales(year, mes, auditoria_id, diezmos, ofrendas, especiales, remesa_enviada) VALUES(?,?,?,?,?,?,?)';
 		
-		datos = [year_temp, mes_temp, $scope.USER.auditoria_id,0,0,0,0,'1'];
+		datos = [year_temp, mes_temp, $scope.USER.auditoria_id,0,0,0,0];
 
 		ConexionServ.query(consulta, datos).then(function(result) {
 

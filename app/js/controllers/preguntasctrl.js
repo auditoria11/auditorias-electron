@@ -24,12 +24,12 @@ $scope.veractpregunta = function(pregunta){
  
 
 
-	 $scope.Insertpreguntas = function(pregunta_crear){
+	 $scope.Insert_preguntas = function(pregunta_crear){
 
 
 	  	
-	 	consulta ="INSERT INTO preguntas(definition, tipo, option1 ,option2, option3, option4, auditoria_id, modificado) VALUES(?, ?, ?, ?, ?, ?, ?, ?) "
-	   ConexionServ.query(consulta, [pregunta_crear.definition, pregunta_crear.tipo, pregunta_crear.option1, pregunta_crear.option2, pregunta_crear.option3, pregunta_crear.option4, pregunta_crear.auditoria,  '1']).then(function(result){
+	 	consulta ="INSERT INTO preguntas(definition, tipo, option1 ,option2, option3, option4, auditoria_id) VALUES(?, ?, ?, ?, ?, ?, ?) "
+	   ConexionServ.query(consulta, [pregunta_crear.definition, pregunta_crear.tipo, pregunta_crear.option1, pregunta_crear.option2, pregunta_crear.option3, pregunta_crear.option4, pregunta_crear.auditoria]).then(function(result){
 
            console.log('pregunta creada', result)
            toastr.success('pregunta creado exitosamente')

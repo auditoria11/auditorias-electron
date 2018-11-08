@@ -253,7 +253,7 @@ angular.module("auditoriaApp")
     // Traemos todos los datos que necesito para trabajar
     $scope.traerDatos = function() {
 			// Traemos USUARIOS
-			consulta = "SELECT rowid, * from usuarios where modificado=1 or eliminado=1";
+			consulta = "SELECT rowid, * from usuarios where modificado=1 or eliminado=1 or id is null";
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.usuarios = result;
@@ -304,7 +304,7 @@ angular.module("auditoriaApp")
 			});
 
 			// Traemos Auditoria
-			consulta = "SELECT rowid, * from auditorias where auditorias.modificado=1 or auditorias.eliminado=1";
+			consulta = "SELECT rowid, * from auditorias where auditorias.modificado=1 or auditorias.eliminado=1 or auditorias.id is null";
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.auditorias = result;
@@ -313,7 +313,7 @@ angular.module("auditoriaApp")
 			});
 
 
-			consulta = "SELECT rowid, * from lib_mensuales libm where libm.modificado=1 or libm.eliminado=1";
+			consulta = "SELECT rowid, * from lib_mensuales libm where libm.modificado=1 or libm.eliminado=1 or libm.id is null";
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.lib_mensuales = result;
@@ -321,7 +321,7 @@ angular.module("auditoriaApp")
 				console.log("Error no es posbile traer libromes", tx);
 			});
 
-			consulta = "SELECT rowid, * from preguntas preg where preg.modificado=1 or preg.eliminado=1";
+			consulta = "SELECT rowid, * from preguntas preg where preg.modificado=1 or preg.eliminado=1 or preg.id is null";
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.preguntas = result;

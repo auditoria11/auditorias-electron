@@ -1,6 +1,6 @@
 {
   "name": "audit-system",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "description": "Aplicación auditar las iglesias Adventistas",
   "main": "main.js",
   "scripts": {
@@ -9,6 +9,7 @@
     "build": "build --mac --win",
     "build-mac": "build --mac",
     "dist": "build -p always",
+    "never": "build -p never",
     "publish": "build --mac --win -p always",
     "postinstall": "install-app-deps"
   },

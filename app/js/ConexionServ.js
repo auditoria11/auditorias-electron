@@ -23,6 +23,7 @@ angular.module('auditoriaApp')
                 "justificacion text  DEFAULT NULL collate nocase, " +
                 "superada integer(1) DEFAULT '0', " +
                 "fecha varchar(100)  DEFAULT NULL collate nocase, " +
+                "tipo varchar(250)  DEFAULT NULL collate nocase, " +
                 "auditoria_id integer DEFAULT NULL," +
                 "modificado varchar(100)  DEFAULT NULL collate nocase, " +
                 "eliminado integer  DEFAULT '0' )";

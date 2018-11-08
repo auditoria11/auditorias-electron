@@ -429,9 +429,9 @@ angular.module("auditoriaApp")
 		}
 		
 		
-		consulta = "INSERT INTO iglesias(nombre, alias, distrito_id, zona, tesorero_id, tipo_propiedad, anombre_propiedad, fecha_propiedad, fecha_fin, tipo_propiedad2, anombre_propiedad2, fecha_propiedad2, fecha_fin2, tipo_propiedad3, anombre_propiedad3, fecha_propiedad3, fecha_fin3, modificado) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		consulta = "INSERT INTO iglesias(nombre, alias, distrito_id, zona, tesorero_id, tipo_propiedad, anombre_propiedad, fecha_propiedad, fecha_fin, tipo_propiedad2, anombre_propiedad2, fecha_propiedad2, fecha_fin2, tipo_propiedad3, anombre_propiedad3, fecha_propiedad3, fecha_fin3) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-		ConexionServ.query(consulta, [ iglesia.nombre, iglesia.alias, distrito_id, iglesia.zona, teso_id, iglesia.tipo_propiedad, iglesia.anombre_propiedad, iglesia.fecha_propiedad_new, iglesia.fecha_fin_new, iglesia.tipo_propiedad2, iglesia.anombre_propiedad2, iglesia.fecha_propiedad_new2, iglesia.fecha_fin_new2, iglesia.tipo_propiedad3, iglesia.anombre_propiedad3, iglesia.fecha_propiedad_new3, iglesia.fecha_fin_new3, '1']).then(function(result) {
+		ConexionServ.query(consulta, [ iglesia.nombre, iglesia.alias, distrito_id, iglesia.zona, teso_id, iglesia.tipo_propiedad, iglesia.anombre_propiedad, iglesia.fecha_propiedad_new, iglesia.fecha_fin_new, iglesia.tipo_propiedad2, iglesia.anombre_propiedad2, iglesia.fecha_propiedad_new2, iglesia.fecha_fin_new2, iglesia.tipo_propiedad3, iglesia.anombre_propiedad3, iglesia.fecha_propiedad_new3, iglesia.fecha_fin_new3]).then(function(result) {
 			$scope.traerDatos();
 			toastr.success("Iglesia creada exitosamente.");
 			$scope.guardando_iglesia 	= false;
@@ -522,10 +522,11 @@ angular.module("auditoriaApp")
     };
 
     $scope.Insertar_asociaciones = function(creater_asociaciones) {
-		console.log(creater_asociaciones);
-		consulta = "INSERT INTO asociaciones(nombre, alias, codigo, union_id, modificado) VALUES(?,?,?,?,?)";
+		console.log(creater_asociaciones, 'bruto');
 
-		ConexionServ.query(consulta, [ creater_asociaciones.nombre, creater_asociaciones.alias, creater_asociaciones.codigo, creater_asociaciones.union.rowid, '1' ]).then( function(result) {
+		consulta = "INSERT INTO asociaciones(nombre, alias, codigo, union_id) VALUES(?,?,?,?)";
+
+		ConexionServ.query(consulta, [ creater_asociaciones.nombre, creater_asociaciones.alias, creater_asociaciones.codigo, creater_asociaciones.union.rowid ]).then( function(result) {
 			$scope.traerDatos();
 			toastr.success("Se ha creado una Nueva asocación  Exitosamente.");
 		}, function(tx) {
