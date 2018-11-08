@@ -114,7 +114,7 @@ angular.module("auditoriaApp")
 		
 		usu.fecha_new = window.fixDate(usu.fecha);
 		
-		consulta = "UPDATE usuarios SET nombres=?, apellidos=?, sexo=?, username=?, password=?, fecha=?, tipo=?, celular=? WHERE rowid=? ";
+		consulta = "UPDATE usuarios SET nombres=?, apellidos=?, sexo=?, username=?, password=?, fecha=?, tipo=?, celular=?, modificado=1 WHERE rowid=? ";
 		ConexionServ.query(consulta, [usu.nombres, usu.apellidos, usu.sexo, usu.username, usu.password, usu.fecha_new, usu.tipo, usu.celular, usu.rowid]).then(function(result) {
 			$scope.ver_edit_usu 		= false;
 			$scope.guardando_cambios 	= false;
@@ -282,10 +282,10 @@ angular.module("auditoriaApp")
 	$scope.ok = ()=>{
 
 		
-		consulta = "DELETE FROM usuarios WHERE rowid=? ";
+		consulta = "UPDATE usuarios SET eliminado=1 WHERE rowid=? ";
 
 		ConexionServ.query(consulta, [elemento.rowid]).then(function(result) {
-			console.log("Usuario eliminada", elemento);
+			console.log("Usuario eliminado", elemento);
 			$modalInstance.close(elemento)
 		}, function(tx) {
 			console.log("usuario no se pudo Eliminar", tx);
