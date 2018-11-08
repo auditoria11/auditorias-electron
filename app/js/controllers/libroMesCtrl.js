@@ -317,6 +317,7 @@ angular.module("auditoriaApp")
 					
 					consulta 	= 'SELECT *, rowid FROM auditorias';
 					ConexionServ.query(consulta, []).then(function(rAudi) {
+						console.log(rAudi);
 						$scope.auditorias = rAudi;
 					}, function(tx) {
 						console.log("Error no se pudo traer auditorias", tx);
