@@ -11,12 +11,16 @@ angular.module('auditoriaApp')
 	ConexionServ.query(consulta, []).then(function(result){
 		$scope.iglesias = result;
 	} , function(tx){
-			console.log('Error no es posbile traer Entidades' , tx)
+		console.log('Error no es posbile traer Entidades' , tx)
 	});
 	 
 	
 	$scope.vercrearauditorias = function(){
 		$scope.vermostrandocrarauditorias = !$scope.vermostrandocrarauditorias
+	}
+	
+	$scope.cancelar_crear_distrito = function(){
+		$scope.vermostrandocrarauditorias = false;
 	}
 
 

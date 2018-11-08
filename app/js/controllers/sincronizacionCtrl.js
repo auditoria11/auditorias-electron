@@ -172,16 +172,17 @@ angular.module("auditoriaApp")
     $scope.descargar_datos = function (elemento){
     	
 		$http.get(rutaServidor.ruta + '/all').then (function(result){
-			auditorias = result.data.auditorias;
-			iglesias = result.data.iglesias;
-			uniones = result.data.uniones;
-			distritos = result.data.distritos;
-			usuarios = result.data.usuarios;
-			auditorias = result.data.auditorias;
-			lib_mensuales = result.data.lib_mensuales;
+			auditorias 		= result.data.auditorias;
+			iglesias 		= result.data.iglesias;
+			uniones 		= result.data.uniones;
+			distritos 		= result.data.distritos;
+			asociaciones 	= result.data.asociaciones;
+			usuarios 		= result.data.usuarios;
+			auditorias 		= result.data.auditorias;
+			lib_mensuales 	= result.data.lib_mensuales;
 			recomendaciones = result.data.recomendaciones;
-			preguntas = result.data.preguntas;
-			respuestas = result.data.respuestas;
+			preguntas 		= result.data.preguntas;
+			respuestas 		= result.data.respuestas;
 
 			for (var i = 0; i < auditorias.length; i++) {
 			 	auditorias[i] 
@@ -196,17 +197,30 @@ angular.module("auditoriaApp")
 					});
 			 }
 
-			for (var i = 0; i < distritos.length; i++) {
+			 for (var i = 0; i < distritos.length; i++) {
+ 
+			  
+				 consulta = 'INSERT INTO distritos (rowid, id, nombre, alias, codigo, pastor_id) VALUES(?, ?, ?, ?, ?, ?)'
+					 ConexionServ.query(consulta, [distritos[i].id, distritos[i].id, distritos[i].nombre, distritos[i].alias, distritos[i].codigo, distritos[i].pastor_id]).then(function(result){
+						 console.log('se cargo distritos', result);
+					 
+					 }, function(tx){
+						 console.log('error', tx);
+					 });
+			  } 
 
-			 
-				consulta = 'INSERT INTO distritos (rowid, id, nombre, alias, codigo, pastor_id) VALUES(?, ?, ?, ?, ?, ?)'
-					ConexionServ.query(consulta, [distritos[i].id, distritos[i].id, distritos[i].nombre, distritos[i].alias, distritos[i].codigo, distritos[i].pastor_id]).then(function(result){
-						console.log('se cargo distritos', result);
-					
-					}, function(tx){
-						console.log('error', tx);
-					});
-			 } 
+			for (var i = 0; i < asociaciones.length; i++) {
+
+			
+				consulta = 'INSERT INTO asociaciones(rowid, id, nombre, alias, codigo, union_id) VALUES(?, ?, ?, ?, ?, ?)'
+				ConexionServ.query(consulta, [asociaciones[i].id, asociaciones[i].id, asociaciones[i].nombre, asociaciones[i].alias, asociaciones[i].codigo, asociaciones[i].union_id]).then(function(result){
+					console.log('se cargo Asociación', result);
+				
+				}, function(tx){
+					console.log('error', tx);
+				});
+			} 
+			
 			for (var i = 0; i < iglesias.length; i++) {
 
 			 
