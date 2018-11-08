@@ -41,14 +41,14 @@ angular.module('auditoriaApp')
         },
         asociaciones: function(asociaciones){
             var defered = $q.defer();
-            
+            console.log(asociaciones);
 
             consulta = 'DELETE FROM asociaciones WHERE id is null or eliminado="1" ';
             ConexionServ.query(consulta).then(function(result){
 
                 consulta = 'UPDATE asociaciones SET modificado=0, eliminado=0';
                 ConexionServ.query(consulta).then(function(result){
-                    
+                    console.log('Por el forrrrrr', asociaciones);
                     for (var i = 0; i < asociaciones.length; i++) {
 
                         consulta = 'INSERT INTO asociaciones (rowid, id, nombre, alias, codigo, zona, union_id, tesorero_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)'
